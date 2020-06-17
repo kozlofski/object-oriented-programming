@@ -12,7 +12,7 @@ public:
     }
 
 protected:
-    std::string name_;
+    std::string name_; 
     size_t amount_;
     size_t basePrice_;
 };

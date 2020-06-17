@@ -35,7 +35,7 @@ public:
     size_t getId() const        { return id_; }
 
 private:
-    size_t capacity_;
+    size_t capacity_; 
     size_t maxCrew_;
     size_t crew_;
     size_t speed_;
