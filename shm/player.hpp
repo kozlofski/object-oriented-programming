@@ -16,9 +16,11 @@ public:
     size_t getAvailableSpace() const { return availableSpace_; };
 
     size_t getSpeed() const { return ship_->getSpeed(); };
-    Cargo* getCargo(size_t index) const { ship_->getCargo(index); };
+    std::shared_ptr<Cargo> getCargo(size_t index) const { return ship_->getCargo(index); };
 
     Player(const Ship& ship,
            int money,
            size_t availableSpace);
+
+    void calculateAvailableSpace();
 };
