@@ -12,10 +12,13 @@ public:
 
     Time() = default;
 
+    size_t getElapsedTime() const { return elapsedTime_; }
+
     void AddObserver(Observer* observer);
     void RemoveObserver(Observer* observer);
     Time& operator++();
 
 private:
+    size_t elapsedTime_{0};
     std::vector<Observer*> observers_;
 };
