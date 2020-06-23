@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "observer.hpp"
+#include "shm_time.hpp"
 
-class Cargo : public Observer {
+class Cargo : public Time::Observer {
 public:
     Cargo(std::string name, size_t amount, size_t basePrice);
 
