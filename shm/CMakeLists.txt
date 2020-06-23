@@ -8,10 +8,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wconversion -We
 
 set(SOURCES
     cargo.cpp
+    fruit.cpp
+    alcohol.cpp
     coordinates.cpp
     island.cpp
     map.cpp
 #    player.cpp
-    ship.cpp)
+    ship.cpp
+    )
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
