@@ -4,19 +4,41 @@ Wykorzystaj kod napisany podczas zajęć. Jeśli go nie masz to skorzystaj z kod
 
 ___
 
-## Zadanie 1
+## Checklist
+
+### OOP#1
+
+- [x] Zadanie 1 - `Cargo` - operator porównania (`operator==`)
+- [x] Zadanie 2 - `Cargo` - gettery oraz konstruktor
+- [x] Zadanie 3 - `Island` i `Coordinates`
+- [x] Zadanie 4 - `Map` - `std::vector<Island&>` `Island* currentPosition_`
+- [x] Zadanie 5 - `Map` - konstruktor bezargumentowy
+- [ ] Zadanie 6 - `Map` - `Island* getIsland(const Island::Coordinates& coordinate)`
+- [x] Zadanie 7 - `Player` - pola, gettery, konstruktor, podstawowe funkcje
+- [ ] Zadanie 8 - `Player` - `availableSpace_`
+
+### OOP#2
+
+___
+
+## Zadania
+
+### OOP#1
+___
+
+### Zadanie 1
 
 W klasie `Cargo` napisz operator porównania (`operator==`), który będzie sprawdzał, czy towary są takie same.
 
 ___
 
-## Zadanie 2
+### Zadanie 2
 
 Do klasy `Cargo` dopisz gettery oraz odpowiedni konstruktor, który wypełni wszystkie pola tej klasy.
 
 ___
 
-## Zadanie 3
+### Zadanie 3
 
 Napisz klasę `Island`, która będzie posiadała zmienną `Coordinates position_` oraz odpowiedni getter.
 
@@ -25,13 +47,13 @@ Klasa `Coordinates` ma określać współrzędne na mapie. Również ją napisz.
 
 ___
 
-## Zadanie 4
+### Zadanie 4
 
 Napisz klasę `Map`, która będzie posiadała `std::vector<Island&>` przechowujący wszystkie wyspy na mapie, oraz zmienną `Island* currentPosition_` określającą aktualną pozycję gracza na mapie.
 
 ___
 
-## Zadanie 5
+### Zadanie 5
 
 W klasie `Map` utwórz konstruktor bezargumentowy, a w jego ciele utwórz 10 wysp, które przechowasz w `std::vector<Island&>`.
 Do wygenerowania losowych wartości pozycji wysp na mapie skorzystaj z [przykładu na cppreference](https://en.cppreference.com/w/cpp/numeric/random/uniform_int_distribution).
@@ -39,7 +61,7 @@ Wymyśl sposób, aby pozycje wysp się nie powielały.
 
 ___
 
-## Zadanie 6
+### Zadanie 6
 
 W klasie `Map` napisz funkcję
 
@@ -49,7 +71,7 @@ Powinna ona przeszukać `std::vector<Island&>` i zwrócić szukaną wyspę.
 
 ___
 
-## Zadanie 7
+### Zadanie 7
 
 Napisz klasę `Player`, która posiadać będzie 3 pola:
 
@@ -66,6 +88,6 @@ Dopisz także 2 funkcje, które powinny zwracać dane ze statku:
 
 ___
 
-## Zadanie 8
+### Zadanie 8
 
 W klasie `Player` napisz prywatną funkcję, która obliczać będzie `availableSpace_` na podstawie aktualnej ilości towaru na statku.
