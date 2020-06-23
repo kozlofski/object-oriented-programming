@@ -23,3 +23,7 @@ bool Cargo::operator==(const Cargo& rhs) const {
     return (typeid(*this).name() == typeid(rhs).name() &&
             equals(rhs));
 }
+
+void Cargo::NextDay() {
+    std::cout << "Cargo: " << name_ << " notified!\n";
+}
