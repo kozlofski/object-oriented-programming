@@ -18,7 +18,6 @@ Fruit& Fruit::operator--() {
 bool Fruit::equals(const Cargo& rhs) const {
     const Fruit* rFruit = dynamic_cast<const Fruit*>(&rhs);
     if (!rFruit) {
-        std::cout << "Zjebane\n";
         return false;
     }
     return (name_ == rFruit->name_ &&

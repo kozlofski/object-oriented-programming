@@ -10,6 +10,7 @@ set(SOURCES
     cargo.cpp
     fruit.cpp
     alcohol.cpp
+    item.cpp
     coordinates.cpp
     island.cpp
     map.cpp
