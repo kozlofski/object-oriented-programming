@@ -2,8 +2,14 @@
 
 #include <iostream>
 
-Cargo::Cargo(std::string name, size_t amount, size_t basePrice)
-    : name_(name), amount_(amount), basePrice_(basePrice) {}
+Cargo::Cargo(std::string name, size_t amount, size_t basePrice, Time* timeObserver)
+    : name_(name), amount_(amount), basePrice_(basePrice), timeObserver_(timeObserver) {
+    timeObserver_->AddObserver(this);
+}
+
+Cargo::~Cargo() {
+    timeObserver_->RemoveObserver(this);
+}
 
 Cargo& Cargo::operator+=(size_t amount) {
     amount_ += amount;

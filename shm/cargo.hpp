@@ -6,12 +6,11 @@
 
 class Cargo : public Time::Observer {
 public:
-    Cargo(std::string name, size_t amount, size_t basePrice);
+    Cargo(std::string name, size_t amount, size_t price, Time* timeObserver);
+    ~Cargo() override;
 
     Cargo& operator+=(size_t amount);
     Cargo& operator-=(size_t amount);
-    ~Cargo() override = default;
-
     bool operator==(const Cargo& rhs) const;
 
     virtual std::string getName() const = 0;
@@ -26,4 +25,5 @@ protected:
     size_t amount_{};
     size_t basePrice_{};
     virtual bool equals(const Cargo& rhs) const = 0;
+    Time* timeObserver_{};
 };
