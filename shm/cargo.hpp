@@ -4,7 +4,7 @@
 
 #include "shm_time.hpp"
 
-class Cargo : public Time::Observer {
+class Cargo : public Time::IObserver {
 public:
     Cargo(std::string name, size_t amount, size_t price, Time* timeObserver);
     ~Cargo() override;

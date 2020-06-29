@@ -4,20 +4,21 @@
 
 class Time {
 public:
-    class Observer {
+    class IObserver {
     public:
-        virtual ~Observer() = default;
+        virtual ~IObserver() = default;
         virtual void NextDay() = 0;
     };
 
     Time() = default;
 
     size_t getElapsedTime() const { return elapsedTime_; }
-    void AddObserver(Observer* observer);
-    void RemoveObserver(Observer* observer);
+
+    void AddObserver(IObserver* observer);
+    void RemoveObserver(IObserver* observer);
     Time& operator++();
 
 private:
-    size_t elapsedTime_{0};
-    std::vector<Observer*> observers_{};
+    size_t elapsedTime_{};
+    std::vector<IObserver*> observers_{};
 };
