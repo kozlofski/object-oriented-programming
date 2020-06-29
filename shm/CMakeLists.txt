@@ -47,7 +47,10 @@ set(SOURCES
     item.cpp
     map.cpp
     player.cpp
-    ship.cpp)
+    ship.cpp
+    fruit.cpp
+    item.cpp
+    alcohol.cpp)
 
 set(TESTS
     tests/alcohol_test.cpp
