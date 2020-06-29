@@ -33,6 +33,7 @@ public:
 
     void load(std::shared_ptr<Cargo> cargo) { cargo_.push_back(cargo); };
     void unload(Cargo* cargo);
+
     void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
 
     void nextDay();
