@@ -48,4 +48,5 @@ private:
     size_t capacity_{};
     Delegate* delegatePlayer_{};
     size_t crew_{};
+    std::vector<std::shared_ptr<Cargo>> cargo_{};
 };
