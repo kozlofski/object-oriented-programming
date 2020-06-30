@@ -11,6 +11,9 @@
 #include "ship.hpp"
 #include "store.hpp"
 
+#include "player.hpp"
+#include "ship.hpp"
+
 int main() {
     Ship myShip(1000, 100, 10, "Purple Widow", 1, nullptr);
     Player player(myShip, 200, 500);
