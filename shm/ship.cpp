@@ -6,11 +6,17 @@
 Ship::Ship()
     : id_(-1) {}
 
-Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity)
-    : maxCrew_(maxCrew), speed_(speed), id_(id), name_(name), capacity_(capacity), crew_(0) {}
+Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate)
+    : maxCrew_(maxCrew), speed_(speed), id_(id), name_(name), capacity_(capacity), delegatePlayer_(delegate), crew_(0) {}
 
 Ship::Ship(int maxCrew, int speed, size_t id)
-    : Ship(maxCrew, speed, id, "", 0) {}
+    : Ship(maxCrew, speed, id, "", 0, nullptr) {}
+
+void Ship::nextDay() {
+    if (delegatePlayer_) {
+        delegatePlayer_->PayCrew(static_cast<int>(crew_));
+    }
+}
 
 void Ship::setName(const std::string& name) {
     name_ = name;

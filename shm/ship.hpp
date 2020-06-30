@@ -8,9 +8,17 @@
 
 class Ship {
 public:
+    class Delegate {
+    public:
+        virtual void PayCrew(int money) = 0;
+        virtual ~Delegate() = default;
+    };
+
     Ship();
-    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity);
+    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate);
     Ship(int maxCrew, int speed, size_t id);
+
+    void nextDay();
 
     void setName(const std::string& name);
     Ship& operator+=(const size_t crew);
@@ -25,12 +33,15 @@ public:
     Cargo* getCargo(size_t index) { return cargo_[index].get(); }
     std::vector<std::shared_ptr<Cargo>> getCargos() const { return cargo_; }
 
+    void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
+
 private:
     size_t maxCrew_{};
     size_t speed_{};
     const size_t id_{};
     std::string name_{};
     size_t capacity_{};
+    Delegate* delegatePlayer_{};
     size_t crew_{};
     std::vector<std::shared_ptr<Cargo>> cargo_{};
 };
