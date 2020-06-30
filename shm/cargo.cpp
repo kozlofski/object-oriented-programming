@@ -24,3 +24,9 @@ bool Cargo::operator==(const Cargo& rhs) const {
             (amount_ == rhs.amount_) &&
             (basePrice_ == rhs.basePrice_));
 }
+
+std::ostream& operator<<(std::ostream& output, const Cargo& cargo) {
+    output << "Cargo name: " << cargo.getName() << " amount: " << cargo.getAmount()
+           << " base prince: " << cargo.getBasePrice();
+    return output;
+}

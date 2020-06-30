@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 class Cargo {
@@ -13,6 +14,8 @@ public:
     std::string getName() const { return name_; }
     size_t getAmount() const { return amount_; }
     size_t getBasePrice() const { return basePrice_; }
+
+    friend std::ostream& operator<<(std::ostream& output, const Cargo& cargo);
 
 private:
     std::string name_{};
