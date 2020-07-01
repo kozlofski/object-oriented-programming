@@ -34,6 +34,17 @@ Ship& Ship::operator-=(const size_t crew) {
     return *this;
 }
 
+void Ship::unload(Cargo* cargo) {
+    if (cargo->getAmount()) {
+        auto it = std::find_if(cargo_.begin(), cargo_.end(), [cargo](const auto* ptr) {
+            return ptr.get() == cargo;
+        });
+        if (it != cargo_.end()) {
+            cargo_.erase(it);
+        }
+    }
+}
+
 void Ship::nextDay() {
     delegatePlayer_->PayCrew(crew_);
 }
