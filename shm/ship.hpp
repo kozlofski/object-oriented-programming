@@ -40,6 +40,10 @@ public:
 
     void nextDay();
 
+    void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
+
+    void nextDay();
+
 private:
     size_t maxCrew_{};
     size_t speed_{};
