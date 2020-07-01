@@ -61,6 +61,10 @@ void Ship::load(std::shared_ptr<Cargo> cargo) {
         }
     }
     cargo_.emplace_back(cargo);
-    void Ship::nextDay() {
+}
+
+void Ship::nextDay() {
+    if (delegatePlayer_) {
         delegatePlayer_->PayCrew(crew_);
     }
+}
