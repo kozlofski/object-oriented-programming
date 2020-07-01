@@ -67,6 +67,4 @@ void Ship::nextDay() {
     if (delegatePlayer_) {
         delegatePlayer_->PayCrew(crew_);
     }
-    void Ship::nextDay() {
-        delegatePlayer_->PayCrew(crew_);
-    }
+}
