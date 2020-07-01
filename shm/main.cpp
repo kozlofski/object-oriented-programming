@@ -11,8 +11,11 @@
 #include "ship.hpp"
 #include "store.hpp"
 
+#include "player.hpp"
+#include "ship.hpp"
+
 int main() {
-    Ship myShip(1000, 100, 10, "Purple Widow", 1);
+    Ship myShip(1000, 100, 10, "Purple Widow", 1, nullptr);
     Player player(myShip, 200, 500);
     // player.getShip()->cargo_.push_back(std::make_shared<Fruit>("Bananas", 10, 10, 6));
     // player.getShip()->cargo_.push_back(std::make_shared<Fruit>("Oranges", 14, 12, 8));
@@ -42,5 +45,10 @@ int main() {
     // testStore.purchase(&player);
     // testStore.sale(&player);
 
+    // Ship ship(1, 2, 3, "a", 2, nullptr);
+    // Player player(ship, 10000, 100);
+    // ship.setDelegate(&player);
+    // ship.nextDay();
+    // std::cout << player.getMoney();
     return 0;
 }
