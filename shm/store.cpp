@@ -10,12 +10,12 @@
 Store::Store() {}
 
 void Store::generate() {
-    Fruit bananas("Bananas", 1, 10, 10);
-    goods_.push_back(std::make_shared<Fruit>(bananas));
-    Fruit oranges("Oranges", 1, 14, 13);
-    goods_.push_back(std::make_shared<Fruit>(oranges));
-    Fruit pineapples("Pineapples", 1, 18, 15);
-    goods_.push_back(std::make_shared<Fruit>(pineapples));
+    // Fruit bananas("Bananas", 1, 10, 10);
+    goods_.push_back(std::make_shared<Fruit>("Bananas", 1, 10, 10));
+    // Fruit oranges("Oranges", 1, 14, 13);
+    // goods_.push_back(std::make_shared<Fruit>(oranges));
+    // Fruit pineapples("Pineapples", 1, 18, 15);
+    // goods_.push_back(std::make_shared<Fruit>(pineapples));
 }
 
 void Store::display() {
