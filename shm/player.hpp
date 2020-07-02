@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <memory>
 
 #include "cargo.hpp"
@@ -9,7 +10,9 @@ class Player {
 public:
     Player(const Ship& ship, size_t money, size_t availableSpace);
 
-    std::shared_ptr<Ship> getShip() const { return ship_; };
+    std::shared_ptr<Ship> getShip() const {
+        return ship_;
+    };
     size_t getMoney() const { return money_; };
     size_t getAvailableSpace() { return calcAvailableSpace(); };
 
