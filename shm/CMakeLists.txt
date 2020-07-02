@@ -43,6 +43,7 @@ set(SOURCES
     alcohol.cpp
     cargo.cpp
     fruit.cpp
+    game.cpp
     island.cpp
     item.cpp
     map.cpp
@@ -54,6 +55,7 @@ set(SOURCES
 set(TESTS
     tests/alcohol_test.cpp
     tests/fruit_test.cpp
+    tests/game_test.cpp
     tests/island_test.cpp
     tests/item_test.cpp
     tests/map_test.cpp
