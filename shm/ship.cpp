@@ -36,7 +36,7 @@ Ship& Ship::operator-=(const size_t crew) {
 
 void Ship::unload(Cargo* cargo) {
     auto it = std::find_if(cargo_.begin(), cargo_.end(), [cargo](const std::shared_ptr<Cargo> ptr) {
-        return ptr->getName() == cargo->getName();
+        return *ptr == *cargo;
     });
     if (it == cargo_.end()) {
         std::cerr << "yerr we couldnt find this cargo comrade!\n";
@@ -55,7 +55,7 @@ void Ship::unload(Cargo* cargo) {
 
 void Ship::load(std::shared_ptr<Cargo> cargo) {
     for (const auto& el : cargo_) {
-        if (el->getName() == cargo->getName()) {
+        if (el == cargo) {
             *el += cargo->getAmount();
             return;
         }
