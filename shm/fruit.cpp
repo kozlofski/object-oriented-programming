@@ -23,7 +23,3 @@ bool Fruit::equals(const Cargo& rhs) const {
     return (name_ == rFruit->name_ &&
             timeToExpire_ == rFruit->timeToExpire_);
 }
-
-void Fruit::nextDay() {
-    Fruit::operator--();
-}

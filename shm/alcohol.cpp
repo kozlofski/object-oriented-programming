@@ -1,7 +1,6 @@
 
 #include "alcohol.hpp"
 
-#include <iostream>
 #include <string>
 
 Alcohol::Alcohol(std::string name, size_t amount, size_t basePrice, size_t alcoholPower)

@@ -5,8 +5,6 @@
 #include "fruit.hpp"
 #include "item.hpp"
 #include "map.hpp"
-#include "player.hpp"
-#include "ship.hpp"
 
 int main() {
     Fruit bananas("Bananas", 200, 10, 8);
