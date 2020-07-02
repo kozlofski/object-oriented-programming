@@ -11,7 +11,7 @@ public:
     std::string getName() const override { return name_; }
     size_t getAmount() const override { return amount_; }
     size_t getBasePrice() const override { return basePrice_; }
-    size_t getPrice() const override { return basePrice_ * (timeToExpire_ / expiryDate_); }
+    size_t getPrice() const override { return basePrice_ * timeToExpire_ / expiryDate_; }
     size_t getTimeToExpire() const { return timeToExpire_; }
 
 private:

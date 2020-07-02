@@ -15,6 +15,6 @@ int main() {
 
     Store testStore{};
     testStore.generate();
-    testStore.display();
+    testStore.purchase(&player);
     return 0;
 }

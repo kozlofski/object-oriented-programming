@@ -8,16 +8,19 @@
 enum class Response { done,
                       lack_of_money,
                       lack_of_cargo,
-                      lack_of_space };
+                      lack_of_space,
+                      cancelled,
+};
 
 class Store {
 public:
     Store();
     void generate();
-    void display();  // for testing - should be replaced by a friend operator <<
+    void purchase(Player* player);  // for testing - should be replaced by a friend operator <<
 
     Response buy(Cargo* cargo, size_t amount, Player* player);
     Response sell(Cargo* cargo, size_t amount, Player* player);
+    Cargo* getCargo(size_t i);
 
     void fillShop();
 
