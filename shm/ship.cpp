@@ -72,3 +72,13 @@ void Ship::load(std::shared_ptr<Cargo> cargo) {
     }
     cargo_.emplace_back(cargo);
 }
+
+void Ship::load(std::shared_ptr<Cargo> cargo) {
+    for (const auto& el : cargo_) {
+        if (el->getName() == cargo->getName()) {
+            *el += cargo->getAmount();
+            return;
+        }
+    }
+    cargo_.emplace_back(cargo);
+}
