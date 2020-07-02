@@ -13,11 +13,8 @@ public:
     size_t getPrice() const override { return basePrice_ * (timeToExpire_ / expiryDate_); }
     size_t getTimeToExpire() const { return timeToExpire_; }
 
-    //override from Cargo
-    void nextDay() override;
-
 private:
-    Fruit& operator--();  // private? kyrtaq`s response: private!
+    Fruit& operator--();
     size_t timeToExpire_{};
     bool equals(const Cargo& rhs) const override;
 };

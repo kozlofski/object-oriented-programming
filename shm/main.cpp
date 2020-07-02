@@ -33,10 +33,5 @@ int main() {
         std::cout << "Different\n";
     }
 
-    Ship ship(1, 2, 3, "a", 2, nullptr);
-    Player player(ship, 10000, 100);
-    ship.setDelegate(&player);
-    ship.nextDay();
-    std::cout << player.getMoney();
     return 0;
 }

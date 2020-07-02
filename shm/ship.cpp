@@ -6,11 +6,11 @@
 Ship::Ship()
     : id_(-1) {}
 
-Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate)
-    : maxCrew_(maxCrew), speed_(speed), id_(id), name_(name), capacity_(capacity), delegatePlayer_(delegate), crew_(0) {}
+Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity)
+    : maxCrew_(maxCrew), speed_(speed), id_(id), name_(name), capacity_(capacity), crew_(0) {}
 
 Ship::Ship(int maxCrew, int speed, size_t id)
-    : Ship(maxCrew, speed, id, "", 0, nullptr) {}
+    : Ship(maxCrew, speed, id, "", 0) {}
 
 void Ship::setName(const std::string& name) {
     name_ = name;
@@ -43,8 +43,4 @@ void Ship::unload(Cargo* cargo) {
             cargo_.erase(it);
         }
     }
-}
-
-void Ship::nextDay() {
-    delegatePlayer_->PayCrew(crew_);
 }
