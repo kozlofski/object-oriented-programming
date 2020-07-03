@@ -8,6 +8,7 @@ Map::Map()
 {
     islands_.reserve(totalIslands);
     generateIsland(totalIslands);
+    currentPosition_ = &islands_.front();
 }
 
 void Map::generateIsland(size_t howMany)
