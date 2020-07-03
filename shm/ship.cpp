@@ -46,7 +46,7 @@ void Ship::unload(Cargo* cargo) {
         std::cerr << "cargo would be negative\n";
         return;
     }
-    (*it)->operator-=(cargo->getAmount());
+    *(*it) -= (cargo->getAmount());
     if ((*it)->getAmount() == 0) {
         cargo_.erase(it);
         cargo_.shrink_to_fit();
@@ -60,6 +60,9 @@ void Ship::load(std::shared_ptr<Cargo> cargo) {
             return;
         }
     }
+    std::find_if(cargo_.begin(), cargo_.end(), [cargo](const auto& el) {
+        return el == cargo;
+    });
     cargo_.emplace_back(cargo);
 }
 
