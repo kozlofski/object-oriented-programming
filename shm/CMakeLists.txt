@@ -47,30 +47,7 @@ set(SOURCES
     item.cpp
     map.cpp
     player.cpp
-    ship.cpp
-    fruit.cpp
-    item.cpp
-    alcohol.cpp)
-
-set(TESTS
-    tests/alcohol_test.cpp
-    tests/fruit_test.cpp
-    tests/island_test.cpp
-    tests/item_test.cpp
-    tests/map_test.cpp
-    tests/player_test.cpp
-    tests/ship_test.cpp)
-
-set(FLAGS -Wall -Wextra -pedantic -Wconversion -Werror)
-
-add_library(${PROJECT_NAME}-lib STATIC ${SOURCES})
-
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}-lib)
-
-add_executable(${PROJECT_NAME}-ut ${TESTS})
-target_link_libraries(${PROJECT_NAME}-ut gtest_main ${PROJECT_NAME}-lib)
-add_test(NAME ${PROJECT_NAME}_test COMMAND ${PROJECT_NAME}-ut)
+    ship.cpp)
 
 set(TESTS
     tests/alcohol_test.cpp
