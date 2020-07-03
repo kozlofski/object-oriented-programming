@@ -1,130 +1,49 @@
 #include "store.hpp"
 
-#include <iostream>
+#include <algorithm>
+#include <memory>
+#include <random>
 
-#include "alcohol.hpp"
 #include "fruit.hpp"
-#include "item.hpp"
-#include "player.hpp"
 
 Store::Store() {}
+// Store::Store(Time* time)
+//     : time_(time) {}
+Store::~Store() {}
 
-void Store::generate() {
-    goods_.push_back(std::make_shared<Fruit>("Bananas", 10, 10, 6));
-    goods_.push_back(std::make_shared<Fruit>("Oranges", 10, 12, 8));
-    goods_.push_back(std::make_shared<Fruit>("Apples", 10, 13, 10));
-    goods_.push_back(std::make_shared<Alcohol>("Rum", 10, 40, 50));
-    goods_.push_back(std::make_shared<Item>("Magic sword", 1, 20, Item::Rarity::legendary));
+void Store::nextDay() {}
+
+Cargo* Store::getCargo(const size_t pos) {
+    return nullptr;
 }
 
-void Store::purchase(Player* player) {
-    std::cout << "== Welcome to our store. Today we have:\n";
-    size_t totalCargo = listCargo(goods_);
-    size_t chosenCargoIndex{0};
-    size_t amount{0};
-    Cargo* chosenCargo;
-    do {
-        std::cout << "== Choose what you want to buy (by index between 0 and " << totalCargo << ") or input number > " << maxCargo_ << " to cancel\n";
-        std::cin >> chosenCargoIndex;
-        if (chosenCargoIndex > maxCargo_) {
-            break;
-        }
-        chosenCargo = chooseCargoToBuy(chosenCargoIndex);
-        if (chosenCargo == nullptr) {
-            continue;
-        };
-        std::cout << "Write amount:\n";
-        std::cin >> amount;
-        buy(chosenCargo, amount, player);
-    } while (true);
+void Store::generateCargo() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    // normal distribution
+    std::uniform_int_distribution<> amount(0, maxAmount);
+    std::uniform_int_distribution<> priceDifference(-5, 5);
+    std::uniform_int_distribution<> expiry(1, 12);
+
+    assortment_.push_back(std::make_shared<Fruit>("Bananas", amount, static_cast<size_t>(10 + priceDifference(gen)), static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Oranges", amount, static_cast<size_t>(10 + priceDifference(gen)), static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Apples", amount, static_cast<size_t>(10 + priceDifference(gen)), static_cast<size_t>(expiry(gen))));
 }
 
-Cargo* Store::chooseCargoToBuy(size_t chosenCargoIndex) {
-    if (chosenCargoIndex > goods_.size()) {
-        std::cout << "Invalid number\n";
-        return nullptr;
-    }
-    return goods_[chosenCargoIndex].get();
+Store::Response Store::buy(Cargo* cargo, size_t amount, Player* player) {
+    return Store::Response::done;
+}
+Store::Response Store::sell(Cargo* cargo, size_t amount, Player* player) {
+    return Store::Response::done;
 }
 
-Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player) {
-    if (amount > player->getAvailableSpace()) {
-        std::cout << "== You don't have enough space\n";
-        return Response::lack_of_space;
-    }
-    if (amount > cargoInStore->getAmount()) {
-        std::cout << "== We don't have that big amount of " << cargoInStore->getName() << "\n";
-        return Response::lack_of_cargo;
-    }
-
-    size_t totalCharge = amount * cargoInStore->getPrice();
-    size_t playersMoney = player->getMoney();
-    if (totalCharge > playersMoney) {
-        std::cout << "== You don't have enough money to buy this\n";
-        return Response::lack_of_money;
-    }
-    // player->getShip()->loadCargo(cargoInStore, amount);
-    player->setMoney(playersMoney - totalCharge);
-    std::cout << amount << " " << cargoInStore->getName() << " bought with total charge of " << totalCharge << " $\n";
-    std::cout << "Money left in wallet: " << player->getMoney() << "\n";
-    return Response::done;
+void Store::listCargo() {
+    std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
+        std::cout << i << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units\n";
+    });
 }
 
-void Store::sale(Player* player) {
-    auto cargoOnShip = player->getShip()->getCargos();
-    std::cout << "== Welcome to our store. ";
-    if (cargoOnShip.size() == 0) {
-        std::cout << "Your ship is empty\n";
-    } else {
-        std::cout << "Your cargo::\n";
-        size_t totalCargo = listCargo(cargoOnShip);
-        size_t chosenCargoIndex{0};
-        size_t amount{0};
-        Cargo* chosenCargo;
-        do {
-            std::cout << "== Choose what you want to sell (by index between 0 and " << totalCargo << ") or input number > " << maxCargo_ << " to cancel\n";
-            std::cin >> chosenCargoIndex;
-            if (chosenCargoIndex > maxCargo_) {
-                break;
-            }
-            chosenCargo = chooseCargoToSell(cargoOnShip, chosenCargoIndex);
-            if (chosenCargo == nullptr) {
-                continue;
-            };
-            std::cout << "Write amount:\n";
-            std::cin >> amount;  // add dealing with wrong number
-            sell(chosenCargo, amount, player);
-        } while (true);
-    }
+Cargo* Store::findMatchCargo(Cargo* cargo) {
+    return nullptr;
 }
-
-Cargo* Store::chooseCargoToSell(std::vector<std::shared_ptr<Cargo>> cargoOnShip, size_t chosenCargoIndex) {
-    if (chosenCargoIndex > cargoOnShip.size()) {
-        std::cout << "Invalid number\n";
-        return nullptr;
-    }
-    return cargoOnShip[chosenCargoIndex].get();
-}
-
-Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player) {
-    if (amount > cargoOnShip->getAmount()) {
-        std::cout << "== You don't have that big amount of " << cargoOnShip->getName() << "\n";
-        return Response::lack_of_cargo;
-    }
-    size_t totalCharge = amount * cargoOnShip->getPrice();
-    // player->getShip()->unloadCargo(cargoOnShip, amount);
-    player->setMoney(player->getMoney() + (amount * cargoOnShip->getPrice()));
-    std::cout << amount << " " << cargoOnShip->getName() << " sold for " << totalCharge << " $\n";
-    std::cout << "Money left in wallet: " << player->getMoney() << "\n";
-    return Response::done;
-}
-
-// this method should be replaced by friend << operator or sth
-size_t Store::listCargo(std::vector<std::shared_ptr<Cargo>> cargos) {
-    size_t i{0};
-    std::cout << "Index\tAmount\tCargo\tPrice\n";
-    for (auto& cargo : cargos) {
-        std::cout << i++ << "\t" << cargo->getAmount() << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\n";
-    }
-    return (i - 1);
-}
+void Store::removeFromStore(Cargo* cargo) {}

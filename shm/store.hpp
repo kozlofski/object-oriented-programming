@@ -4,6 +4,7 @@
 
 #include "cargo.hpp"
 #include "player.hpp"
+// #include #time.hpp"
 
 class Store {
 public:
@@ -11,21 +12,25 @@ public:
                           lack_of_money,
                           lack_of_cargo,
                           lack_of_space,
-                          cancelled,
     };
 
+    // Store(Time* time);
     Store();
-    void generate();
-    void purchase(Player* player);
-    void sale(Player* player);
-    size_t listCargo(std::vector<std::shared_ptr<Cargo>> cargos);
+    ~Store();
+    void nextDay();
+    Cargo* getCargo(const size_t pos);
+    void generateCargo();
+    Store::Response buy(Cargo* cargo, size_t amount, Player* player);  //private?
+    Store::Response sell(Cargo* cargo, size_t amount, Player* player);
+
+    void listCargo();
 
 private:
-    Store::Response buy(Cargo* cargo, size_t amount, Player* player);  //private?
-    Cargo* chooseCargoToBuy(size_t i);
-    Store::Response sell(Cargo* cargo, size_t amount, Player* player);
-    Cargo* chooseCargoToSell(std::vector<std::shared_ptr<Cargo>> cargoOnShip, size_t i);
-    size_t capacity_{1000};                        // for future improvement
-    std::vector<std::shared_ptr<Cargo>> goods_{};  // more descriptive name, like polish "asortyment"?
+    // Time* time_;
+    std::vector<std::shared_ptr<Cargo>> assortment_{};
     const size_t maxCargo_ = 10;
+    const size_t maxAmount = 25;
+
+    Cargo* findMatchCargo(Cargo* cargo);
+    void removeFromStore(Cargo* cargo);
 };
