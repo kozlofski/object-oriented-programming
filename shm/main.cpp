@@ -20,6 +20,9 @@ int main() {
 
     Store testStore{};
     testStore.generateCargo();
+    testStore.listCargo();
+    testStore.nextDay();
+    testStore.listCargo();
 
     // testStore.purchase(&player);
     // testStore.sale(&player);
