@@ -24,7 +24,7 @@ TEST(shipTest, ConstructorAndGettersTest) {
     ASSERT_EQ(testShip2.getName(), "");
     ASSERT_EQ(testShip2.getCapacity(), 0);
 
-    Ship testShip3(testMaxCrew, testSpeed, testId, testName, testCapacity);
+    Ship testShip3(testMaxCrew, testSpeed, testId, testName, testCapacity, nullptr);
     ASSERT_EQ(testShip3.getMaxCrew(), testMaxCrew);
     ASSERT_EQ(testShip3.getSpeed(), testSpeed);
     ASSERT_EQ(testShip3.getId(), testId);
