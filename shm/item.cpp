@@ -16,7 +16,7 @@ bool Item::equals(const Cargo& rhs) const {
             rarity_ == rItem->rarity_);
 }
 
-std::string Item::checkRarity() {
+std::string Item::printRarity() {
     switch (rarity_) {
     case Rarity::common:
         return "common";
@@ -44,6 +44,6 @@ void Item::nextDay() {
     if (dist6(rng) > 90) {
         rarity_ = static_cast<Rarity>(static_cast<int>(rarity_) - 1);
         std::cout << "Oh no! One of your crew member dropped your " << name_
-                  << "and it lost it`s rarity :( now it`s just " << checkRarity() << '\n';
+                  << "and it lost it`s rarity :( now it`s just " << printRarity() << '\n';
     }
 }

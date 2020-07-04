@@ -24,7 +24,7 @@ public:
     //override from Cargo
     void nextDay() override;
 
-    std::string checkRarity();
+    std::string printRarity();
 
 private:
     Rarity rarity_{};
