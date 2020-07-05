@@ -25,6 +25,9 @@ public:
 
     void listCargo();
 
+    //friend std::ostream& operator<<(std::ostream& out, const Cargo& cargo);
+    friend std::ostream& operator<<(std::ostream& out, const Store& store);
+
 private:
     // Time* time_;
     std::vector<std::shared_ptr<Cargo>> assortment_{};

@@ -95,3 +95,12 @@ void Store::generateCargo() {
 
     assortment_.push_back(std::make_shared<Item>("Sword", 1, 100 + 10 * static_cast<size_t>(priceDifference(gen)), static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
 }
+
+std::ostream& operator<<(std::ostream& out, const Cargo& cargo) {
+    out << "-------------------------------------\n";
+    out << "Cargo name: " << cargo.getName() << '\n';
+    out << "Cargo amount: " << cargo.getAmount() << '\n';
+    out << "Cargo baseprice: " << cargo.getBasePrice() << '\n';
+    out << "-------------------------------------\n";
+    return out;
+}
