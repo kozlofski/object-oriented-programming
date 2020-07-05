@@ -12,7 +12,7 @@ class Map {
 public:
     Map();
     Island* getIsland(const Island::Coordinates& coordinates);
-    Island* getCurrentPosition() const {return currentPosition_};
+    Island* getCurrentPosition() const { return currentPosition_; };
 
 private:
     Island* currentPosition_{};

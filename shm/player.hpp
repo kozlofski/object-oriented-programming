@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-
 #include "cargo.hpp"
 #include "ship.hpp"
 
