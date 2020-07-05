@@ -11,6 +11,8 @@ public:
 
         bool operator==(const Coordinates& rhs) const;
 
+        static size_t distance(const Coordinates& lhs, const Coordinates& rhs);
+
     private:
         size_t positionX_{};
         size_t positionY_{};
