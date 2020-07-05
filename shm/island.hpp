@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>  // for size_t
+#include <iostream>
 
 class Island {
 public:
@@ -12,6 +13,7 @@ public:
         bool operator==(const Coordinates& rhs) const;
 
         static size_t distance(const Coordinates& lhs, const Coordinates& rhs);
+        friend std::ostream& operator<<(std::ostream& output, const Coordinates& coordinates);
 
     private:
         size_t positionX_{};

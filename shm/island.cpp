@@ -22,3 +22,7 @@ size_t Island::Coordinates::distance(const Coordinates& lhs, const Coordinates& 
 
 Island::Island(size_t position_X, size_t position_Y)
     : position_(Coordinates(position_X, position_Y)) {}
+std::ostream& operator<<(std::ostream& output, const Island::Coordinates& coordinates) {
+    output << "(" << coordinates.positionX_ << ", " << coordinates.positionY_ << ")";
+    return output;
+}
