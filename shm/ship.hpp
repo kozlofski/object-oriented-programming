@@ -27,6 +27,9 @@ public:
     std::vector<std::shared_ptr<Cargo>> cargo_{};  // pls move this to private when load and unload is implemented
     // now it is public for testing from main() (adding cargo)
 
+    void load(std::shared_ptr<Cargo> cargo);
+    void unload(Cargo* cargo);
+
 private:
     size_t maxCrew_{};
     size_t speed_{};
