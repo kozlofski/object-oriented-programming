@@ -24,6 +24,8 @@ public:
     size_t getCrew() const { return crew_; }
     Cargo* getCargo(size_t index) { return cargo_[index].get(); }
     std::vector<std::shared_ptr<Cargo>> getCargos() const { return cargo_; }
+    std::vector<std::shared_ptr<Cargo>> cargo_{};  // pls move this to private when load and unload is implemented
+    // now it is public for testing from main() (adding cargo)
 
 private:
     size_t maxCrew_{};
@@ -32,5 +34,4 @@ private:
     std::string name_{};
     size_t capacity_{};
     size_t crew_{};
-    std::vector<std::shared_ptr<Cargo>> cargo_{};
 };

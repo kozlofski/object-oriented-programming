@@ -47,7 +47,8 @@ set(SOURCES
     item.cpp
     map.cpp
     player.cpp
-    ship.cpp)
+    ship.cpp
+    store.cpp)
 
 set(TESTS
     tests/alcohol_test.cpp

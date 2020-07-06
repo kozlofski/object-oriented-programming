@@ -8,9 +8,9 @@ class Item : public Cargo {
 public:
     enum class Rarity {
         common = 1,
-        rare = 2,
-        epic = 4,
-        legendary = 8
+        rare = 5,
+        epic = 15,
+        legendary = 50
     };
 
     Item(std::string name, size_t amount, size_t basePrice, Rarity rarity);
