@@ -30,15 +30,9 @@ public:
     size_t getCrew() const { return crew_; }
     Cargo* getCargo(size_t index) { return cargo_[index].get(); }
     std::vector<std::shared_ptr<Cargo>> getCargos() const { return cargo_; }
-    std::vector<std::shared_ptr<Cargo>> cargo_{};  // pls move this to private when load and unload is implemented
-    // now it is public for testing from main() (adding cargo)
 
     void load(std::shared_ptr<Cargo> cargo);
     void unload(Cargo* cargo);
-
-    void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
-
-    void nextDay();
 
     void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
 
