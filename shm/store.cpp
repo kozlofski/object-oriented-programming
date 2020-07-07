@@ -15,8 +15,15 @@ Store::Store() {}
 Store::~Store() {}
 
 void Store::nextDay() {
-    assortment_.clear();
-    generateCargo();
+    for (const auto& el : assortment_) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<std::mt19937::result_type> dist6(-10, 10);
+        if (auto check = dist6(rd); el->getAmount() < check) {
+            *(el) -= (el->getAmount() + 1);
+        }
+        *(el) += dist6(rd);
+    }
 }
 
 Cargo* Store::getCargo(const size_t pos) {
