@@ -8,8 +8,14 @@
 
 class Ship {
 public:
+    class Delegate {
+    public:
+        virtual ~Delegate() = default;
+        virtual void PayCrew(size_t money) = 0;
+    };
+
     Ship();
-    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity);
+    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate);
     Ship(int maxCrew, int speed, size_t id);
 
     void setName(const std::string& name);
@@ -24,11 +30,13 @@ public:
     size_t getCrew() const { return crew_; }
     Cargo* getCargo(size_t index) { return cargo_[index].get(); }
     std::vector<std::shared_ptr<Cargo>> getCargos() const { return cargo_; }
-    std::vector<std::shared_ptr<Cargo>> cargo_{};  // pls move this to private when load and unload is implemented
-    // now it is public for testing from main() (adding cargo)
 
     void load(std::shared_ptr<Cargo> cargo);
     void unload(Cargo* cargo);
+
+    void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
+
+    void nextDay();
 
 private:
     size_t maxCrew_{};
@@ -36,5 +44,7 @@ private:
     const size_t id_{};
     std::string name_{};
     size_t capacity_{};
+    Delegate* delegatePlayer_{};
     size_t crew_{};
+    std::vector<std::shared_ptr<Cargo>> cargo_{};
 };
