@@ -4,11 +4,15 @@
 
 Cargo::Cargo(std::string name, size_t amount, size_t basePrice, Time* timeObserver)
     : name_(name), amount_(amount), basePrice_(basePrice), timeObserver_(timeObserver) {
-    timeObserver_->AddObserver(this);
+    if (timeObserver_) {
+        timeObserver_->addObserver(this);
+    }
 }
 
 Cargo::~Cargo() {
-    timeObserver_->RemoveObserver(this);
+    if (timeObserver_) {
+        timeObserver_->removeObserver(this);
+    }
 }
 
 Cargo& Cargo::operator+=(size_t amount) {
@@ -28,8 +32,4 @@ Cargo& Cargo::operator-=(size_t amount) {
 bool Cargo::operator==(const Cargo& rhs) const {
     return (typeid(*this).name() == typeid(rhs).name() &&
             equals(rhs));
-}
-
-void Cargo::NextDay() {
-    std::cout << "Cargo: " << name_ << " notified!\n";
 }

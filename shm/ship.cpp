@@ -3,14 +3,31 @@
 #include <algorithm>
 #include <iostream>
 
-Ship::Ship()
-    : id_(0) {}
+Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate, Time* timeObserver)
+    : maxCrew_(maxCrew),
+      speed_(speed),
+      id_(id),
+      name_(name),
+      capacity_(capacity),
+      delegatePlayer_(delegate),
+      timeObserver_(timeObserver),
+      crew_(0) {
+    if (timeObserver_) {
+        timeObserver_->addObserver(this);
+    }
+}
 
-Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate)
-    : maxCrew_(maxCrew), speed_(speed), id_(id), name_(name), capacity_(capacity), delegatePlayer_(delegate), crew_(0) {}
+Ship::Ship(int maxCrew, int speed, size_t id, Time* timeObserver)
+    : Ship(maxCrew, speed, id, "", 0, nullptr, timeObserver) {}
 
-Ship::Ship(int maxCrew, int speed, size_t id)
-    : Ship(maxCrew, speed, id, "", 0, nullptr) {}
+Ship::Ship(Time* timeObserver)
+    : Ship(0, 0, 0, "", 0, nullptr, timeObserver) {}
+
+Ship::~Ship() {
+    if (timeObserver_) {
+        timeObserver_->removeObserver(this);
+    }
+}
 
 void Ship::setName(const std::string& name) {
     name_ = name;

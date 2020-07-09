@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-Fruit::Fruit(std::string name, size_t amount, size_t basePrice, size_t timeToExpire)
-    : Cargo(name, amount, basePrice), timeToExpire_(timeToExpire) {
+Fruit::Fruit(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t timeToExpire)
+    : Cargo(name, amount, basePrice, timeObserver), timeToExpire_(timeToExpire) {
 }
 
 Fruit& Fruit::operator--() {
@@ -25,5 +25,6 @@ bool Fruit::equals(const Cargo& rhs) const {
 }
 
 void Fruit::nextDay() {
+    std::cout << "Fruit nextDay\n";
     Fruit::operator--();
 }

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <random>
 
-Item::Item(std::string name, size_t amount, size_t basePrice, Rarity rarity)
-    : Cargo(name, amount, basePrice), rarity_(rarity) {}
+Item::Item(std::string name, size_t amount, size_t basePrice, Time* timeObserver, Rarity rarity)
+    : Cargo(name, amount, basePrice, timeObserver), rarity_(rarity) {}
 
 bool Item::equals(const Cargo& rhs) const {
     const Item* rItem = dynamic_cast<const Item*>(&rhs);
@@ -38,6 +38,7 @@ std::string Item::printRarity() {
 }
 
 void Item::nextDay() {
+    std::cout << "Item nextDay\n";
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 100);

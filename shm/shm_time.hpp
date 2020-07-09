@@ -7,15 +7,15 @@ public:
     class IObserver {
     public:
         virtual ~IObserver() = default;
-        virtual void NextDay() = 0;
+        virtual void nextDay() = 0;
     };
 
     Time() = default;
 
     size_t getElapsedTime() const { return elapsedTime_; }
 
-    void AddObserver(IObserver* observer);
-    void RemoveObserver(IObserver* observer);
+    void addObserver(IObserver* observer);
+    void removeObserver(IObserver* observer);
     Time& operator++();
 
 private:

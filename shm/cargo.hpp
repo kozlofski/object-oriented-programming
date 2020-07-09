@@ -6,7 +6,9 @@
 
 class Cargo : public Time::IObserver {
 public:
-    Cargo(std::string name, size_t amount, size_t price, Time* timeObserver);
+    Cargo(std::string name, size_t amount, size_t basePrice, Time* timeObserver);
+
+    //Override from Time::IObserver
     ~Cargo() override;
 
     Cargo& operator+=(size_t amount);
@@ -17,8 +19,6 @@ public:
     virtual size_t getAmount() const = 0;
     virtual size_t getBasePrice() const = 0;
     virtual size_t getPrice() const = 0;
-
-    virtual void nextDay() = 0;
 
 protected:
     std::string name_{};

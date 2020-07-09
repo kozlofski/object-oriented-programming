@@ -9,12 +9,22 @@
 #include "fruit.hpp"
 #include "item.hpp"
 
-Store::Store() {}
-// Store::Store(Time* time)
-//     : time_(time) {}
-Store::~Store() {}
+Store::Store(Time* timeObserver)
+    : timeObserver_(timeObserver) {
+    if (timeObserver_) {
+        generateCargo();
+        timeObserver_->addObserver(this);
+    }
+}
+
+Store::~Store() {
+    if (timeObserver_) {
+        timeObserver_->removeObserver(this);
+    }
+}
 
 void Store::nextDay() {
+    std::cout << "Store nextDay\n";
     for (const auto& el : assortment_) {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -90,15 +100,51 @@ void Store::generateCargo() {
     std::normal_distribution<> alcoholPower(0, 5);
     std::normal_distribution<> rarity(0, 3);
 
-    assortment_.push_back(std::make_shared<Fruit>("Bananas", static_cast<size_t>(amount(gen)), 10 + static_cast<size_t>(priceDifference(gen)), static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Oranges", static_cast<size_t>(amount(gen)), 12 + static_cast<size_t>(priceDifference(gen)), static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Apples", static_cast<size_t>(amount(gen)), 14 + static_cast<size_t>(priceDifference(gen)), static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Pears", static_cast<size_t>(amount(gen)), 15 + static_cast<size_t>(priceDifference(gen)), static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Bananas",
+                                                  static_cast<size_t>(amount(gen)),
+                                                  10 + static_cast<size_t>(priceDifference(gen)),
+                                                  timeObserver_,
+                                                  static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Oranges",
+                                                  static_cast<size_t>(amount(gen)),
+                                                  12 + static_cast<size_t>(priceDifference(gen)),
+                                                  timeObserver_,
+                                                  static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Apples",
+                                                  static_cast<size_t>(amount(gen)),
+                                                  14 + static_cast<size_t>(priceDifference(gen)),
+                                                  timeObserver_,
+                                                  static_cast<size_t>(expiry(gen))));
+    assortment_.push_back(std::make_shared<Fruit>("Pears",
+                                                  static_cast<size_t>(amount(gen)),
+                                                  15 + static_cast<size_t>(priceDifference(gen)),
+                                                  timeObserver_,
+                                                  static_cast<size_t>(expiry(gen))));
 
-    assortment_.push_back(std::make_shared<Alcohol>("Rum", static_cast<size_t>(amount(gen)), 80 + static_cast<size_t>(priceDifference(gen)), 50 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Vodka", static_cast<size_t>(amount(gen)), 60 + static_cast<size_t>(priceDifference(gen)), 40 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Absinth", static_cast<size_t>(amount(gen)), 80 + static_cast<size_t>(priceDifference(gen)), 70 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Wine", static_cast<size_t>(amount(gen)), 70 + static_cast<size_t>(priceDifference(gen)), 12 + static_cast<size_t>(alcoholPower(gen))));
+    assortment_.push_back(std::make_shared<Alcohol>("Rum",
+                                                    static_cast<size_t>(amount(gen)),
+                                                    80 + static_cast<size_t>(priceDifference(gen)),
+                                                    timeObserver_,
+                                                    50 + static_cast<size_t>(alcoholPower(gen))));
+    assortment_.push_back(std::make_shared<Alcohol>("Vodka",
+                                                    static_cast<size_t>(amount(gen)),
+                                                    60 + static_cast<size_t>(priceDifference(gen)),
+                                                    timeObserver_,
+                                                    40 + static_cast<size_t>(alcoholPower(gen))));
+    assortment_.push_back(std::make_shared<Alcohol>("Absinth",
+                                                    static_cast<size_t>(amount(gen)),
+                                                    80 + static_cast<size_t>(priceDifference(gen)),
+                                                    timeObserver_,
+                                                    70 + static_cast<size_t>(alcoholPower(gen))));
+    assortment_.push_back(std::make_shared<Alcohol>("Wine",
+                                                    static_cast<size_t>(amount(gen)),
+                                                    70 + static_cast<size_t>(priceDifference(gen)),
+                                                    timeObserver_,
+                                                    12 + static_cast<size_t>(alcoholPower(gen))));
 
-    assortment_.push_back(std::make_shared<Item>("Sword", 1, 100 + 10 * static_cast<size_t>(priceDifference(gen)), static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
+    assortment_.push_back(std::make_shared<Item>("Sword",
+                                                 1,
+                                                 100 + 10 * static_cast<size_t>(priceDifference(gen)),
+                                                 timeObserver_,
+                                                 static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
 }

@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "../item.hpp"
+#include "../shm_time.hpp"
 
 #include <string>
 
@@ -10,7 +11,8 @@ constexpr size_t testBasePrice = 40;
 constexpr Item::Rarity testRarity = Item::Rarity::legendary;
 
 TEST(itemTest, ConstructorAndGettersTest) {
-    Item itemTest(testName, testAmount, testBasePrice, testRarity);
+    Time t;
+    Item itemTest(testName, testAmount, testBasePrice, &t, testRarity);
 
     ASSERT_EQ(itemTest.getName(), testName);
     ASSERT_EQ(itemTest.getAmount(), testAmount);

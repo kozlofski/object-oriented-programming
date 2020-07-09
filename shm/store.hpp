@@ -4,9 +4,9 @@
 
 #include "cargo.hpp"
 #include "player.hpp"
-// #include #time.hpp"
+#include "shm_time.hpp"
 
-class Store {
+class Store : public Time::IObserver {
 public:
     enum class Response { done,
                           lack_of_money,
@@ -14,10 +14,12 @@ public:
                           lack_of_space,
     };
 
-    // Store(Time* time);
-    Store();
-    ~Store();
-    void nextDay();
+    Store(Time* timeObserver);
+
+    //Override from Time::IObserver
+    ~Store() override;
+    void nextDay() override;
+
     Cargo* getCargo(const size_t pos);
     void generateCargo();
     Store::Response buy(Cargo* cargo, size_t amount, Player* player);  //private?
@@ -26,7 +28,7 @@ public:
     void listCargo();
 
 private:
-    // Time* time_;
+    Time* timeObserver_{};
     std::vector<std::shared_ptr<Cargo>> assortment_{};
     const size_t maxCargo_ = 10;
     const size_t maxAmount = 25;

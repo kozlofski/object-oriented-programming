@@ -1,19 +1,26 @@
+
+
+#include "alcohol.hpp"
 #include "cargo.hpp"
+#include "fruit.hpp"
+#include "item.hpp"
 #include "shm_time.hpp"
+#include "store.hpp"
 
 int main() {
     Time t;
-    Cargo c1{"c1", 100, 40, &t};
-    Cargo c2{"c2", 100, 40, &t};
 
-    // t.AddObserver(&c1);
-    // t.AddObserver(&c2);
+    Fruit f{"Apple", 100, 20, &t, 100};
+    Alcohol a{"Vodka", 500, 50, &t, 48};
+    Item i{"Sword", 50, 800, &t, Item::Rarity::legendary};
+
+    Store st{&t};
+    st.listCargo();
 
     ++t;
+    st.listCargo();
     ++t;
-
-    // t.RemoveObserver(&c2);
-    // t.RemoveObserver(&c1);
+    st.listCargo();
 
     return 0;
 }
