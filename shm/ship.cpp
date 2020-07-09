@@ -89,6 +89,7 @@ void Ship::load(std::shared_ptr<Cargo> cargo)
 
 void Ship::nextDay()
 {
+    std::cout << "Ship nextDay\n";
     if (delegatePlayer_) {
         delegatePlayer_->PayCrew(crew_);
     }

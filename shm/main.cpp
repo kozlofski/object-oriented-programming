@@ -4,8 +4,12 @@
 #include "cargo.hpp"
 #include "fruit.hpp"
 #include "item.hpp"
+#include "player.hpp"
+#include "ship.hpp"
 #include "shm_time.hpp"
 #include "store.hpp"
+
+#include <string>
 
 int main()
 {
@@ -15,13 +19,15 @@ int main()
     Alcohol a{"Vodka", 500, 50, &t, 48};
     Item i{"Sword", 50, 800, &t, Item::Rarity::legendary};
 
-    Store st{&t};
-    st.listCargo();
+    Player p{500, &t};
+
+    // Store st{&t};
+    // st.listCargo();
 
     ++t;
-    st.listCargo();
+    // st.listCargo();
     ++t;
-    st.listCargo();
+    // st.listCargo();
 
     return 0;
 }

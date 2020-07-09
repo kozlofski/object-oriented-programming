@@ -7,15 +7,14 @@
 #include <memory>
 
 constexpr int testMoney = 100;
-constexpr size_t testAvailableSpace = 200;
 
 TEST(playerTest, ConstructorAndGettersTest)
 {
     Time t;
-    Ship shipTest(&t);
-    Player playerTest(shipTest, testMoney, testAvailableSpace);
+    auto shipTest = std::make_shared<Ship>(&t);
+    Player playerTest{shipTest, testMoney};
 
     //TODO: How to test ship in player
     ASSERT_EQ(playerTest.getMoney(), testMoney);
-    ASSERT_EQ(playerTest.getAvailableSpace(), testAvailableSpace);
+    ASSERT_EQ(playerTest.getAvailableSpace(), 0);
 }
