@@ -11,11 +11,13 @@ public:
     Player(const Ship& ship, size_t money, size_t availableSpace);
 
     //override from Ship::Delegate
-    void PayCrew(size_t money) override {
+    void PayCrew(size_t money) override
+    {
         money_ -= static_cast<int>(money);
     };
 
-    std::shared_ptr<Ship> getShip() const {
+    std::shared_ptr<Ship> getShip() const
+    {
         return ship_;
     };
     size_t getMoney() const { return money_; };

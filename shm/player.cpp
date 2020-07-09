@@ -7,7 +7,8 @@ Player::Player(const Ship& ship,
       money_(money),
       availableSpace_(availableSpace) {}
 
-size_t Player::calcAvailableSpace() {
+size_t Player::calcAvailableSpace()
+{
     size_t spaceOccupied = 0;
     for (const auto el : ship_->getCargos()) {
         spaceOccupied += el->getAmount();

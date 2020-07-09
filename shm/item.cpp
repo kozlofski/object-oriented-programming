@@ -6,7 +6,8 @@
 Item::Item(std::string name, size_t amount, size_t basePrice, Time* timeObserver, Rarity rarity)
     : Cargo(name, amount, basePrice, timeObserver), rarity_(rarity) {}
 
-bool Item::equals(const Cargo& rhs) const {
+bool Item::equals(const Cargo& rhs) const
+{
     const Item* rItem = dynamic_cast<const Item*>(&rhs);
     if (!rItem) {
         return false;
@@ -16,7 +17,8 @@ bool Item::equals(const Cargo& rhs) const {
             rarity_ == rItem->rarity_);
 }
 
-std::string Item::printRarity() {
+std::string Item::printRarity()
+{
     switch (rarity_) {
     case Rarity::common:
         return "common";
@@ -37,7 +39,8 @@ std::string Item::printRarity() {
     return "";
 }
 
-void Item::nextDay() {
+void Item::nextDay()
+{
     std::cout << "Item nextDay\n";
     std::random_device dev;
     std::mt19937 rng(dev());

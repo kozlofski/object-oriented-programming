@@ -3,7 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
-void Time::addObserver(IObserver* observer) {
+void Time::addObserver(IObserver* observer)
+{
     if (std::find(std::begin(observers_),
                   std::end(observers_),
                   observer) == std::end(observers_)) {
@@ -12,7 +13,8 @@ void Time::addObserver(IObserver* observer) {
     std::cout << __func__ << ": " << typeid(*observer).name() << ' ' << observers_.size() << '\n';
 }
 
-void Time::removeObserver(IObserver* observer) {
+void Time::removeObserver(IObserver* observer)
+{
     observers_.erase(std::remove(std::begin(observers_),
                                  std::end(observers_),
                                  observer),
@@ -20,7 +22,8 @@ void Time::removeObserver(IObserver* observer) {
     std::cout << __func__ << ": " << typeid(*observer).name() << ' ' << observers_.size() << '\n';
 }
 
-Time& Time::operator++() {
+Time& Time::operator++()
+{
     elapsedTime_++;
     std::cout << "operator " << observers_.size() << ' ' << getElapsedTime() << '\n';
     for (const auto& observer : observers_) {

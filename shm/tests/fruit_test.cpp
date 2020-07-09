@@ -10,7 +10,8 @@ constexpr size_t testAmount = 200;
 constexpr size_t testBasePrice = 40;
 constexpr size_t testTimeToExpire = 8;
 
-TEST(fruitTest, ConstructorAndGettersTest) {
+TEST(fruitTest, ConstructorAndGettersTest)
+{
     Time t;
     Fruit fruitTest(testName, testAmount, testBasePrice, &t, testTimeToExpire);
 

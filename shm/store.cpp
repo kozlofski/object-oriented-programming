@@ -10,20 +10,23 @@
 #include "item.hpp"
 
 Store::Store(Time* timeObserver)
-    : timeObserver_(timeObserver) {
+    : timeObserver_(timeObserver)
+{
     if (timeObserver_) {
         generateCargo();
         timeObserver_->addObserver(this);
     }
 }
 
-Store::~Store() {
+Store::~Store()
+{
     if (timeObserver_) {
         timeObserver_->removeObserver(this);
     }
 }
 
-void Store::nextDay() {
+void Store::nextDay()
+{
     std::cout << "Store nextDay\n";
     for (const auto& el : assortment_) {
         std::random_device rd;
@@ -36,14 +39,16 @@ void Store::nextDay() {
     }
 }
 
-Cargo* Store::getCargo(const size_t pos) {
+Cargo* Store::getCargo(const size_t pos)
+{
     if (pos > assortment_.size()) {
         return nullptr;
     }
     return assortment_[pos].get();
 }
 
-Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player) {
+Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
+{
     if (amount > player->getAvailableSpace()) {
         return Response::lack_of_space;
     }
@@ -60,7 +65,8 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player) {
     return Store::Response::done;
 }
 
-Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player) {
+Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
+{
     if (amount > cargoOnShip->getAmount()) {
         return Response::lack_of_cargo;
     }
@@ -69,7 +75,8 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player) {
     return Store::Response::done;
 }
 
-void Store::listCargo() {
+void Store::listCargo()
+{
     std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
         std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units.\n";
     });
@@ -87,10 +94,12 @@ void Store::listCargo() {
 //     return nullptr;
 // }
 
-void Store::removeFromStore(Cargo* cargo) {
+void Store::removeFromStore(Cargo* cargo)
+{
 }
 
-void Store::generateCargo() {
+void Store::generateCargo()
+{
     std::random_device rd;
     std::mt19937 gen(rd());
     // normal distribution

@@ -9,7 +9,8 @@
 constexpr int testMoney = 100;
 constexpr size_t testAvailableSpace = 200;
 
-TEST(playerTest, ConstructorAndGettersTest) {
+TEST(playerTest, ConstructorAndGettersTest)
+{
     Time t;
     Ship shipTest(&t);
     Player playerTest(shipTest, testMoney, testAvailableSpace);

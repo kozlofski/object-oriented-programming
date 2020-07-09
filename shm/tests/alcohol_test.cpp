@@ -10,7 +10,8 @@ constexpr size_t testAmount = 200;
 constexpr size_t testBasePrice = 40;
 constexpr size_t testAlcoholPower = 94;
 
-TEST(alcoholTest, ConstructorAndGettersTest) {
+TEST(alcoholTest, ConstructorAndGettersTest)
+{
     Time t;
     Alcohol alcoholTest(testName, testAmount, testBasePrice, &t, testAlcoholPower);
 

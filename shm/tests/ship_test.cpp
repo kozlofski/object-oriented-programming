@@ -9,7 +9,8 @@ constexpr int testSpeed = 50;
 const std::string testName = "testShip";
 constexpr size_t testId = 20;
 
-TEST(shipTest, ConstructorAndGettersTest) {
+TEST(shipTest, ConstructorAndGettersTest)
+{
     Time t;
 
     Ship testShip(&t);

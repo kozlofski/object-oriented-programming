@@ -11,7 +11,8 @@ Ship::Ship(int maxCrew, int speed, size_t id, const std::string& name, int capac
       capacity_(capacity),
       delegatePlayer_(delegate),
       timeObserver_(timeObserver),
-      crew_(0) {
+      crew_(0)
+{
     if (timeObserver_) {
         timeObserver_->addObserver(this);
     }
@@ -23,17 +24,20 @@ Ship::Ship(int maxCrew, int speed, size_t id, Time* timeObserver)
 Ship::Ship(Time* timeObserver)
     : Ship(0, 0, 0, "", 0, nullptr, timeObserver) {}
 
-Ship::~Ship() {
+Ship::~Ship()
+{
     if (timeObserver_) {
         timeObserver_->removeObserver(this);
     }
 }
 
-void Ship::setName(const std::string& name) {
+void Ship::setName(const std::string& name)
+{
     name_ = name;
 }
 
-Ship& Ship::operator+=(const size_t crew) {
+Ship& Ship::operator+=(const size_t crew)
+{
     if (crew_ + crew > maxCrew_) {
         std::cerr << "Max crew exceeded\n";
         return *this;
@@ -42,7 +46,8 @@ Ship& Ship::operator+=(const size_t crew) {
     return *this;
 }
 
-Ship& Ship::operator-=(const size_t crew) {
+Ship& Ship::operator-=(const size_t crew)
+{
     if (crew_ < crew) {
         std::cerr << "Crew number can't be negative\n";
         return *this;
@@ -51,7 +56,8 @@ Ship& Ship::operator-=(const size_t crew) {
     return *this;
 }
 
-void Ship::unload(Cargo* cargo) {
+void Ship::unload(Cargo* cargo)
+{
     auto it = std::find_if(cargo_.begin(), cargo_.end(), [cargo](const std::shared_ptr<Cargo> ptr) {
         return *ptr == *cargo;
     });
@@ -70,7 +76,8 @@ void Ship::unload(Cargo* cargo) {
     }
 }
 
-void Ship::load(std::shared_ptr<Cargo> cargo) {
+void Ship::load(std::shared_ptr<Cargo> cargo)
+{
     for (const auto& el : cargo_) {
         if (el == cargo) {
             *el += cargo->getAmount();
@@ -80,7 +87,8 @@ void Ship::load(std::shared_ptr<Cargo> cargo) {
     cargo_.emplace_back(cargo);
 }
 
-void Ship::nextDay() {
+void Ship::nextDay()
+{
     if (delegatePlayer_) {
         delegatePlayer_->PayCrew(crew_);
     }

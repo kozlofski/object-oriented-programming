@@ -7,7 +7,8 @@
 #include "shm_time.hpp"
 #include "store.hpp"
 
-int main() {
+int main()
+{
     Time t;
 
     Fruit f{"Apple", 100, 20, &t, 100};

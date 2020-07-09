@@ -4,12 +4,14 @@
 #include <random>
 #include <vector>
 
-Map::Map() {
+Map::Map()
+{
     islands_.reserve(totalIslands);
     generateIsland(totalIslands);
 }
 
-void Map::generateIsland(size_t howMany) {
+void Map::generateIsland(size_t howMany)
+{
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> xDistrib(0, mapWidth);
@@ -28,7 +30,8 @@ void Map::generateIsland(size_t howMany) {
     }
 }
 
-Island* Map::getIsland(const Island::Coordinates& coordinates) {
+Island* Map::getIsland(const Island::Coordinates& coordinates)
+{
     auto foundIsland = std::find_if(std::begin(islands_),
                                     std::end(islands_),
                                     [&coordinates](const auto& island) {

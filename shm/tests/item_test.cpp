@@ -10,7 +10,8 @@ constexpr size_t testAmount = 200;
 constexpr size_t testBasePrice = 40;
 constexpr Item::Rarity testRarity = Item::Rarity::legendary;
 
-TEST(itemTest, ConstructorAndGettersTest) {
+TEST(itemTest, ConstructorAndGettersTest)
+{
     Time t;
     Item itemTest(testName, testAmount, testBasePrice, &t, testRarity);
 

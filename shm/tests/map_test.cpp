@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
-TEST(mapTest, ConstructorAndGettersTest) {
+TEST(mapTest, ConstructorAndGettersTest)
+{
     Map mapTest;
 }
