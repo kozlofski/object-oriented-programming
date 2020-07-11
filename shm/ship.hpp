@@ -5,8 +5,9 @@
 #include <vector>
 
 #include "cargo.hpp"
+#include "shm_time.hpp"
 
-class Ship {
+class Ship : public Time::IObserver {
 public:
     class Delegate {
     public:
@@ -14,9 +15,12 @@ public:
         virtual void PayCrew(size_t money) = 0;
     };
 
-    Ship();
-    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate);
-    Ship(int maxCrew, int speed, size_t id);
+    Ship(Time* timeObserver);
+    Ship(int maxCrew, int speed, size_t id, const std::string& name, int capacity, Delegate* delegate, Time* timeObserver);
+    Ship(int maxCrew, int speed, size_t id, Time* timeObserver);
+
+    // Override from Time::IObserver
+    ~Ship() override;
 
     void setName(const std::string& name);
     Ship& operator+=(const size_t crew);
@@ -36,7 +40,8 @@ public:
 
     void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
 
-    void nextDay();
+    // Override from Time::IObserver
+    void nextDay() override;
 
 private:
     size_t maxCrew_{};
@@ -45,6 +50,8 @@ private:
     std::string name_{};
     size_t capacity_{};
     Delegate* delegatePlayer_{};
+    Time* timeObserver_{};
+
     size_t crew_{};
     std::vector<std::shared_ptr<Cargo>> cargo_{};
 };

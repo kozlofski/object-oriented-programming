@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "../alcohol.hpp"
+#include "../shm_time.hpp"
 
 #include <string>
 
@@ -9,8 +10,10 @@ constexpr size_t testAmount = 200;
 constexpr size_t testBasePrice = 40;
 constexpr size_t testAlcoholPower = 94;
 
-TEST(alcoholTest, ConstructorAndGettersTest) {
-    Alcohol alcoholTest(testName, testAmount, testBasePrice, testAlcoholPower);
+TEST(alcoholTest, ConstructorAndGettersTest)
+{
+    Time t;
+    Alcohol alcoholTest(testName, testAmount, testBasePrice, &t, testAlcoholPower);
 
     ASSERT_EQ(alcoholTest.getName(), testName);
     ASSERT_EQ(alcoholTest.getAmount(), testAmount);

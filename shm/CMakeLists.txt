@@ -48,6 +48,7 @@ set(SOURCES
     map.cpp
     player.cpp
     ship.cpp
+    shm_time.cpp
     store.cpp)
 
 set(TESTS

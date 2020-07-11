@@ -6,7 +6,8 @@
 constexpr size_t testPositionX = 100;
 constexpr size_t testPositionY = 200;
 
-TEST(islandTest, ConstructorAndGettersTest) {
+TEST(islandTest, ConstructorAndGettersTest)
+{
     Island islandTest(testPositionX, testPositionY);
     Island::Coordinates testCoordinates(testPositionX, testPositionY);
 
@@ -18,7 +19,8 @@ TEST(islandTest, ConstructorAndGettersTest) {
 class IslandDistanceFixture : public ::testing::TestWithParam<std::tuple<size_t, size_t, size_t, size_t, size_t>> {
 };
 
-TEST_P(IslandDistanceFixture, CheckDistance) {
+TEST_P(IslandDistanceFixture, CheckDistance)
+{
     Island::Coordinates lhs(std::get<0>(GetParam()), std::get<1>(GetParam()));
     Island::Coordinates rhs(std::get<2>(GetParam()), std::get<3>(GetParam()));
 

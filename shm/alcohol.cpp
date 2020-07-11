@@ -5,11 +5,13 @@
 #include <random>
 #include <string>
 
-Alcohol::Alcohol(std::string name, size_t amount, size_t basePrice, size_t alcoholPower)
-    : Cargo(name, amount, basePrice), alcoholPower_(alcoholPower) {
+Alcohol::Alcohol(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t alcoholPower)
+    : Cargo(name, amount, basePrice, timeObserver), alcoholPower_(alcoholPower)
+{
 }
 
-bool Alcohol::equals(const Cargo& rhs) const {
+bool Alcohol::equals(const Cargo& rhs) const
+{
     const Alcohol* rAlcohol = dynamic_cast<const Alcohol*>(&rhs);
     if (!rAlcohol)
         return false;
@@ -17,7 +19,9 @@ bool Alcohol::equals(const Cargo& rhs) const {
             alcoholPower_ == rAlcohol->alcoholPower_);
 }
 
-void Alcohol::nextDay() {
+void Alcohol::nextDay()
+{
+    std::cout << "Alcohol nextDay\n";
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 100);

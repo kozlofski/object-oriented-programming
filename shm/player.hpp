@@ -6,16 +6,18 @@
 #include "cargo.hpp"
 #include "ship.hpp"
 
+class Time;
 class Player : public Ship::Delegate {
 public:
-    Player(const Ship& ship, size_t money, size_t availableSpace);
+    Player(const std::shared_ptr<Ship> ship, size_t money, size_t availableSpace);
+    Player(const std::shared_ptr<Ship> ship, size_t money);
+    Player(size_t money, Time* timeObserver);
 
     //override from Ship::Delegate
-    void PayCrew(size_t money) override {
-        money_ -= static_cast<int>(money);
-    };
+    void PayCrew(size_t money) override;
 
-    std::shared_ptr<Ship> getShip() const {
+    std::shared_ptr<Ship> getShip() const
+    {
         return ship_;
     };
     size_t getMoney() const { return money_; };
