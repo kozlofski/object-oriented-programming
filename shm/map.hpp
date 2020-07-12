@@ -15,6 +15,7 @@ public:
     Map(Time* timeObserver);
     Island* getIsland(const Island::Coordinates& coordinates);
     Island* getCurrentPosition() const { return currentPosition_; };
+    size_t getTotalIslans() const { return totalIslands; };
 
     size_t getDistanceToIsland(const Island* destination) const;
     void travel(Island* destination);

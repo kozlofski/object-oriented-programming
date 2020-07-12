@@ -1,6 +1,7 @@
 #include "map.hpp"
 
 #include <algorithm>
+#include <iomanip>
 #include <random>
 #include <vector>
 
@@ -57,8 +58,10 @@ void Map::travel(Island* destination)
 std::ostream&
 operator<<(std::ostream& output, const Map& map)
 {
+    size_t i = 1;
     for (const auto& island : map.islands_) {
-        std::cout << island.getPosition() << '\n';
+        std::cout << std::setw(2) << i++ << ". " << island.getPosition()
+                  << " ---> Distance: " << map.getDistanceToIsland(&island) << '\n';
     }
     return output;
 }

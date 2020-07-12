@@ -1,11 +1,13 @@
 #pragma once
 
+#include "island.hpp"
 #include "map.hpp"
 #include "player.hpp"
 #include "shm_time.hpp"
 
 #include <cstddef>  // for size_t
 #include <memory>
+#include <string>
 
 class Game {
 public:
@@ -40,7 +42,11 @@ private:
     void printLooseScreen();
     void makeAction(action choice);
     void travel();
+    Island* chooseIslandToTravel() const;
     void buy();
     void sell();
     void printCargo();
+    void clearScreen() const;
+    void clearScreen(std::string additionalInfo) const;
+    void printLine(char character) const;
 };

@@ -5,8 +5,6 @@
 #include <memory>
 #include <string>
 
-const std::string line(80, '*');
-
 Game::Game(size_t money, size_t days, size_t finalGoal)
     : money_(money), days_(days), finalGoal_(finalGoal), currentDay_(1) {}
 
@@ -16,28 +14,27 @@ void Game::startGame()
     player_ = std::make_shared<Player>(money_, time_.get());
     map_ = std::make_shared<Map>(time_.get());
 
+    std::system("clear");
     std::cout << "Welcome in SHM game, you have " << days_ << " days to earn "
               << finalGoal_ << ".\nGOOD LUCK!\n\n";
 
     while (true) {
         size_t actionInput = std::numeric_limits<size_t>::max();
         do {
-            printMenu();
+            clearScreen();
             printOptions();
             while (!(std::cin >> actionInput)) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::system("clear");
-                std::cout << "\nYou've chosen wrong number. Do it once again!\n\n";
-                printMenu();
+                clearScreen("You've chosen wrong number. Do it once again!\n");
                 printOptions();
             }
 
             std::cout << '\n'
                       << actionInput << '\n';
             if (!checkOptions(actionInput)) {
-                std::system("clear");
-                std::cout << "\nYou've chosen wrong number. Do it once again!\n\n";
+                clearScreen("You've chosen wrong number. Do it once again!\n");
+                printOptions();
             }
         } while (!checkOptions(actionInput));
 
@@ -53,7 +50,7 @@ void Game::startGame()
             break;
         }
         makeAction(actionChosen);
-        std::system("clear");
+        // std::system("clear");
     }
 }
 
@@ -75,14 +72,15 @@ bool Game::checkLooseConditions() const
 
 void Game::printMenu() const
 {
-    std::cout << line << "\n";
+    printLine('*');
     std::cout << "Money: " << player_->getMoney()
               << " Day: " << currentDay_
               << " Days left: " << days_ - currentDay_
               << "\nCurrent position: "
               << map_->getCurrentPosition()->getPosition()
-              << "\n";
-    std::cout << line << "\n\n";
+              << '\n';
+    printLine('*');
+    std::cout << '\n';
 }
 
 void Game::printOptions() const
@@ -100,13 +98,13 @@ bool Game::checkOptions(size_t option) const
 
 void Game::printWinScreen()
 {
-    std::system("clear");
+    // std::system("clear");
     std::cout << "Win screen!!\n";
 }
 
 void Game::printLooseScreen()
 {
-    std::system("clear");
+    // std::system("clear");
     std::cout << "Loose screen!!\n";
 }
 
@@ -132,6 +130,38 @@ void Game::makeAction(action choice)
 
 void Game::travel()
 {
+    clearScreen("TRAVEL");
+    auto islandToTravel = chooseIslandToTravel();
+}
+
+Island* Game::chooseIslandToTravel() const
+{
+    size_t inputX = std::numeric_limits<size_t>::max();
+    size_t inputY = std::numeric_limits<size_t>::max();
+    Island* chosenIsland = nullptr;
+
+    do {
+        std::cout << "Choose the island you want to go to:\n\n";
+        std::cout << *map_;
+        std::cout << "Your choice: ";
+        while (!(std::cin >> inputX >> inputY)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            clearScreen("You've chosen wrong Island. Do it once again!");
+
+            std::cout << "Choose the island you want to go to:\n\n";
+            std::cout << *map_;
+            std::cout << "Your choice: ";
+        }
+        chosenIsland = map_->getIsland(Island::Coordinates(inputX, inputY));
+
+        if (!chosenIsland) {
+            clearScreen("You've chosen wrong Island. Do it once again!");
+        }
+    } while (!chosenIsland);
+
+    return chosenIsland;
 }
 
 void Game::buy()
@@ -144,4 +174,26 @@ void Game::sell()
 
 void Game::printCargo()
 {
+}
+
+void Game::clearScreen() const
+{
+    std::system("clear");
+    printMenu();
+}
+
+void Game::clearScreen(std::string additionalInfo) const
+{
+    std::system("clear");
+    printLine('_');
+    std::cout << "INFO: " << additionalInfo << '\n';
+    printLine('_');
+    std::cout << '\n';
+    printMenu();
+}
+
+void Game::printLine(char character) const
+{
+    std::string line(80, character);
+    std::cout << line << '\n';
 }
