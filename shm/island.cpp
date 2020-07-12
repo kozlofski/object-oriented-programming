@@ -1,6 +1,7 @@
 #include "island.hpp"
 
 #include <cmath>
+#include <iomanip>
 
 Island::Coordinates::Coordinates(size_t positionX, size_t positionY)
     : positionX_(positionX), positionY_(positionY) {}
@@ -20,9 +21,19 @@ size_t Island::Coordinates::distance(const Coordinates& lhs, const Coordinates& 
     return static_cast<size_t>(std::lround(distance));
 }
 
-Island::Island(size_t position_X, size_t position_Y)
-    : position_(Coordinates(position_X, position_Y)) {}
-std::ostream& operator<<(std::ostream& output, const Island::Coordinates& coordinates) {
-    output << "(" << coordinates.positionX_ << ", " << coordinates.positionY_ << ")";
+Island::Island(size_t position_X, size_t position_Y, Time* timeObserver)
+    : position_(Coordinates(position_X, position_Y))
+{
+    store_ = std::make_shared<Store>(timeObserver);
+}
+
+std::ostream&
+operator<<(std::ostream& output, const Island::Coordinates& coordinates)
+{
+    output << '('
+           << std::setw(3) << coordinates.positionX_
+           << ", "
+           << std::setw(3) << coordinates.positionY_
+           << ')';
     return output;
 }

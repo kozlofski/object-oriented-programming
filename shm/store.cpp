@@ -13,9 +13,9 @@ Store::Store(Time* timeObserver)
     : timeObserver_(timeObserver)
 {
     if (timeObserver_) {
-        generateCargo();
         timeObserver_->addObserver(this);
     }
+    generateCargo();
 }
 
 Store::~Store()
@@ -32,7 +32,8 @@ void Store::nextDay()
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<std::mt19937::result_type> dist6(-10, 10);
-        if (auto check = dist6(rd); el->getAmount() < check) {
+        auto check = dist6(rd);
+        if (el->getAmount() < check) {
             *(el) -= (el->getAmount() + 1);
         }
         *(el) += dist6(rd);

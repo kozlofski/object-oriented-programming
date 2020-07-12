@@ -2,6 +2,7 @@
 
 #include "map.hpp"
 #include "player.hpp"
+#include "shm_time.hpp"
 
 #include <cstddef>  // for size_t
 #include <memory>
@@ -26,6 +27,7 @@ private:
     size_t currentDay_{};
     std::shared_ptr<Map> map_{};
     std::shared_ptr<Player> player_{};
+    std::shared_ptr<Time> time_{};
 
     void printMenu();
 };

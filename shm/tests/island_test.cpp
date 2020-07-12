@@ -8,7 +8,7 @@ constexpr size_t testPositionY = 200;
 
 TEST(islandTest, ConstructorAndGettersTest)
 {
-    Island islandTest(testPositionX, testPositionY);
+    Island islandTest(testPositionX, testPositionY, nullptr);
     Island::Coordinates testCoordinates(testPositionX, testPositionY);
 
     auto coordinates = islandTest.getPosition();
