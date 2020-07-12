@@ -14,6 +14,7 @@ public:
         sell = 2,
         travel = 3,
         printCargo = 4,
+        quitGame = 5,
     };
 
     Game(size_t money, size_t days, size_t finalGoal);
@@ -25,9 +26,21 @@ private:
     size_t days_{};
     size_t finalGoal_{};
     size_t currentDay_{};
+
     std::shared_ptr<Map> map_{};
     std::shared_ptr<Player> player_{};
     std::shared_ptr<Time> time_{};
 
-    void printMenu();
+    bool checkWinConditions() const;
+    bool checkLooseConditions() const;
+    void printMenu() const;
+    void printOptions() const;
+    bool checkOptions(size_t option) const;
+    void printWinScreen();
+    void printLooseScreen();
+    void makeAction(action choice);
+    void travel();
+    void buy();
+    void sell();
+    void printCargo();
 };

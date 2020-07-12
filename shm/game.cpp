@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <string>
 
@@ -17,22 +18,130 @@ void Game::startGame()
 
     std::cout << "Welcome in SHM game, you have " << days_ << " days to earn "
               << finalGoal_ << ".\nGOOD LUCK!\n\n";
-    printMenu();
+
+    while (true) {
+        size_t actionInput = std::numeric_limits<size_t>::max();
+        do {
+            printMenu();
+            printOptions();
+            while (!(std::cin >> actionInput)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::system("clear");
+                std::cout << "\nYou've chosen wrong number. Do it once again!\n\n";
+                printMenu();
+                printOptions();
+            }
+
+            std::cout << '\n'
+                      << actionInput << '\n';
+            if (!checkOptions(actionInput)) {
+                std::system("clear");
+                std::cout << "\nYou've chosen wrong number. Do it once again!\n\n";
+            }
+        } while (!checkOptions(actionInput));
+
+        action actionChosen = static_cast<action>(actionInput);
+        if (actionChosen == action::quitGame) {
+            std::cout << "\nQuit Game!\n\n";
+            if (checkWinConditions()) {
+                printWinScreen();
+            }
+            else {
+                printLooseScreen();
+            }
+            break;
+        }
+        makeAction(actionChosen);
+        std::system("clear");
+    }
 }
 
-void Game::printMenu()
+bool Game::checkWinConditions() const
 {
-    std::cout << line << "\n\n";
-    //TODO: print data from Time class!!!
+    return player_->getMoney() >= finalGoal_;
+}
+
+bool Game::checkLooseConditions() const
+{
+    if (player_->getMoney() == 0) {
+        return true;
+    }
+    if ((currentDay_ >= days_) && (player_->getMoney() < finalGoal_)) {
+        return true;
+    }
+    return false;
+}
+
+void Game::printMenu() const
+{
+    std::cout << line << "\n";
     std::cout << "Money: " << player_->getMoney()
               << " Day: " << currentDay_
               << " Days left: " << days_ - currentDay_
               << "\nCurrent position: "
               << map_->getCurrentPosition()->getPosition()
-              << "\n\n";
+              << "\n";
+    std::cout << line << "\n\n";
+}
 
-    map_->getCurrentPosition()->getStore()->listCargo();
+void Game::printOptions() const
+{
+    std::cout << "Choose number with action you wanna make\n\n";
+    std::cout << "1. Buy\n2. Sell\n3. Tavel\n4. Print cargo on ship\n5. Quit game\n\n";
+    std::cout << "Your choice: ";
+}
 
-    std::cout << "\n"
-              << *map_ << '\n';
+bool Game::checkOptions(size_t option) const
+{
+    return ((option >= static_cast<size_t>(action::buy)) &&
+            (option <= static_cast<size_t>(action::quitGame)));
+}
+
+void Game::printWinScreen()
+{
+    std::system("clear");
+    std::cout << "Win screen!!\n";
+}
+
+void Game::printLooseScreen()
+{
+    std::system("clear");
+    std::cout << "Loose screen!!\n";
+}
+
+void Game::makeAction(action choice)
+{
+    switch (choice) {
+    case action::buy:
+        buy();
+        break;
+    case action::sell:
+        sell();
+        break;
+    case action::travel:
+        travel();
+        break;
+    case action::printCargo:
+        printCargo();
+        break;
+    default:
+        break;
+    }
+}
+
+void Game::travel()
+{
+}
+
+void Game::buy()
+{
+}
+
+void Game::sell()
+{
+}
+
+void Game::printCargo()
+{
 }
