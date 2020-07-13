@@ -57,3 +57,11 @@ void Player::PayCrew(size_t money)
         money_ = 0;
     }
 };
+
+void Player::purchaseCargo(Cargo* cargo, size_t price, size_t amount)
+{
+    availableSpace_ -= amount;
+    money_ -= price;
+
+    ship_->load(cargo, amount);
+}

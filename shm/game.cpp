@@ -199,7 +199,47 @@ void Game::increseDays(const size_t days)
 
 void Game::buy()
 {
+    int test = 0;
     resetScreen("BUY");
+
+    size_t cargoPosition = 0;
+    size_t amount = 0;
+    Cargo* chosenCargo = nullptr;
+
+    do {
+        std::cout << "Choose cargo you want to buy:\n\n";
+        //TODO: change to operator<<
+        map_->getCurrentPosition()->getStore()->listCargo();
+
+        std::cout << "Your choice: ";
+        while (!(std::cin >> cargoPosition)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            resetScreen("You've chosen wrong cargo. Do it once again!");
+
+            std::cout << "Choose cargo you want to buy:\n\n";
+            map_->getCurrentPosition()->getStore()->listCargo();
+            std::cout << "Your choice: ";
+        }
+
+        chosenCargo = map_->getCurrentPosition()->getStore()->getCargo(cargoPosition);
+
+        if (!chosenCargo) {
+            resetScreen("You've chosen wrong cargo. Do it once again!");
+        }
+    } while (!chosenCargo);
+
+    std::cout << "How many cargo you wanna buy?\n";
+    while (!(std::cin >> amount)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        resetScreen("You've chosen wrong amount. Do it once again!\n");
+    }
+
+    map_->getCurrentPosition()->getStore()->buy(chosenCargo, amount, player_.get());
+
+    std::cin >> test;
 }
 
 void Game::sell()
@@ -209,7 +249,7 @@ void Game::sell()
 
 void Game::printCargo()
 {
-    std::string choice = "NO";
+    std::string choice = "no";
     do {
         resetScreen("CARGO ON SHIP");
         player_->getShip()->printCargo();

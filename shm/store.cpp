@@ -56,6 +56,7 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
     if (amount > player->getAvailableSpace()) {
         return Response::lack_of_space;
     }
+
     if (amount > cargoInStore->getAmount()) {
         return Response::lack_of_cargo;
     }
@@ -65,7 +66,9 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
     if (totalCharge > playersMoney) {
         return Response::lack_of_money;
     }
-    player->setMoney(playersMoney - totalCharge);
+
+    *cargoInStore -= amount;
+    player->purchaseCargo(cargoInStore, totalCharge, amount);
     return Store::Response::done;
 }
 
@@ -86,11 +89,10 @@ void Store::listCargo()
     });
 }
 
-// Cargo* Store::findMatchCargo(Cargo* cargo) {
+// Cargo* Store::findMatchCargo(Cargo* cargo)
+// {
 //     auto found = std::find(assortment_.begin(), assortment_.end(), [&cargo](auto& elem) {
-//         return (elem.get()->getName() == cargo->getName() &&
-//                 elem.get()->getBasePrice() == cargo->getBasePrice() &&
-//                 elem.get()->getPrice() == cargo->getPrice());
+//         return (elem->getName() == cargo->getName());
 //     });
 //     if (found != assortment_.end()) {
 //         return (*found).get();

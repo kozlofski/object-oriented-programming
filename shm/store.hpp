@@ -22,7 +22,7 @@ public:
 
     Cargo* getCargo(const size_t pos);
 
-    Store::Response buy(Cargo* cargo, size_t amount, Player* player);
+    Store::Response buy(Cargo* cargoInStore, size_t amount, Player* player);
     Store::Response sell(Cargo* cargo, size_t amount, Player* player);
 
     void listCargo();
@@ -34,6 +34,6 @@ private:
     const size_t maxCargo_{10};
     const size_t maxAmount_{25};
 
-    Cargo* findMatchCargo(Cargo* cargo);
+    //Cargo* findMatchCargo(Cargo* cargo);
     void generateCargo();
 };
