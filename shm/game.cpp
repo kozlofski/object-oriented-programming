@@ -1,12 +1,13 @@
 #include "game.hpp"
 
+#include <cmath>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <string>
 
 Game::Game(size_t money, size_t days, size_t finalGoal)
-    : money_(money), days_(days), finalGoal_(finalGoal), currentDay_(1) {}
+    : money_(money), days_(days), finalGoal_(finalGoal) {}
 
 void Game::startGame()
 {
@@ -14,43 +15,30 @@ void Game::startGame()
     player_ = std::make_shared<Player>(money_, time_.get());
     map_ = std::make_shared<Map>(time_.get());
 
+    currentDay_ = time_->getElapsedTime();
+
+    //Hire crew
+    *player_->getShip() += player_->getShip()->getMaxCrew();
+
     std::system("clear");
     std::cout << "Welcome in SHM game, you have " << days_ << " days to earn "
               << finalGoal_ << ".\nGOOD LUCK!\n\n";
 
     while (true) {
-        size_t actionInput = std::numeric_limits<size_t>::max();
-        do {
-            clearScreen();
-            printOptions();
-            while (!(std::cin >> actionInput)) {
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                clearScreen("You've chosen wrong number. Do it once again!\n");
-                printOptions();
-            }
+        action actionChosen = chooseOption();
 
-            std::cout << '\n'
-                      << actionInput << '\n';
-            if (!checkOptions(actionInput)) {
-                clearScreen("You've chosen wrong number. Do it once again!\n");
-                printOptions();
-            }
-        } while (!checkOptions(actionInput));
-
-        action actionChosen = static_cast<action>(actionInput);
         if (actionChosen == action::quitGame) {
             std::cout << "\nQuit Game!\n\n";
-            if (checkWinConditions()) {
-                printWinScreen();
-            }
-            else {
-                printLooseScreen();
-            }
             break;
         }
         makeAction(actionChosen);
-        // std::system("clear");
+    }
+
+    if (checkWinConditions()) {
+        printWinScreen();
+    }
+    else {
+        printLooseScreen();
     }
 }
 
@@ -76,6 +64,7 @@ void Game::printMenu() const
     std::cout << "Money: " << player_->getMoney()
               << " Day: " << currentDay_
               << " Days left: " << days_ - currentDay_
+              << " Crew: " << player_->getShip()->getCrew()
               << "\nCurrent position: "
               << map_->getCurrentPosition()->getPosition()
               << '\n';
@@ -88,6 +77,30 @@ void Game::printOptions() const
     std::cout << "Choose number with action you wanna make\n\n";
     std::cout << "1. Buy\n2. Sell\n3. Tavel\n4. Print cargo on ship\n5. Quit game\n\n";
     std::cout << "Your choice: ";
+}
+
+Game::action Game::chooseOption() const
+{
+    size_t actionInput = std::numeric_limits<size_t>::max();
+    do {
+        resetScreen();
+        printOptions();
+        while (!(std::cin >> actionInput)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            resetScreen("You've chosen wrong number. Do it once again!\n");
+            printOptions();
+        }
+
+        std::cout << '\n'
+                  << actionInput << '\n';
+        if (!checkOptions(actionInput)) {
+            resetScreen("You've chosen wrong number. Do it once again!\n");
+            printOptions();
+        }
+    } while (!checkOptions(actionInput));
+
+    return static_cast<action>(actionInput);
 }
 
 bool Game::checkOptions(size_t option) const
@@ -130,8 +143,11 @@ void Game::makeAction(action choice)
 
 void Game::travel()
 {
-    clearScreen("TRAVEL");
+    resetScreen("TRAVEL");
     auto islandToTravel = chooseIslandToTravel();
+    auto travelTime = countTravelTime(islandToTravel);
+    increseDays(travelTime);
+    map_->travel(islandToTravel);
 }
 
 Island* Game::chooseIslandToTravel() const
@@ -143,25 +159,45 @@ Island* Game::chooseIslandToTravel() const
     do {
         std::cout << "Choose the island you want to go to:\n\n";
         std::cout << *map_;
-        std::cout << "Your choice: ";
+        std::cout << "Your choice -> X Y: ";
         while (!(std::cin >> inputX >> inputY)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-            clearScreen("You've chosen wrong Island. Do it once again!");
+            resetScreen("You've chosen wrong Island. Do it once again!");
 
             std::cout << "Choose the island you want to go to:\n\n";
             std::cout << *map_;
-            std::cout << "Your choice: ";
+            std::cout << "Your choice -> X Y: ";
         }
         chosenIsland = map_->getIsland(Island::Coordinates(inputX, inputY));
 
         if (!chosenIsland) {
-            clearScreen("You've chosen wrong Island. Do it once again!");
+            resetScreen("You've chosen wrong Island. Do it once again!");
         }
     } while (!chosenIsland);
 
     return chosenIsland;
+}
+
+size_t Game::countTravelTime(const Island* islandToTravel)
+{
+    auto travelDistance = map_->getDistanceToIsland(islandToTravel);
+    return static_cast<size_t>(std::ceil(static_cast<double>(travelDistance) / static_cast<double>(player_->getSpeed())));
+}
+
+void Game::increseDays(const size_t days)
+{
+    auto daysNo = days;
+
+    if (days > (days_ - currentDay_)) {
+        daysNo = days_ - currentDay_;
+    }
+
+    while (daysNo--) {
+        ++(*time_);
+    }
+    currentDay_ = time_->getElapsedTime();
 }
 
 void Game::buy()
@@ -176,15 +212,15 @@ void Game::printCargo()
 {
 }
 
-void Game::clearScreen() const
+void Game::resetScreen() const
 {
-    std::system("clear");
+    // std::system("clear");
     printMenu();
 }
 
-void Game::clearScreen(std::string additionalInfo) const
+void Game::resetScreen(const std::string& additionalInfo) const
 {
-    std::system("clear");
+    // std::system("clear");
     printLine('_');
     std::cout << "INFO: " << additionalInfo << '\n';
     printLine('_');

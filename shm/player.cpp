@@ -1,6 +1,6 @@
 #include "player.hpp"
 
-constexpr int k_maxCrew{100};
+constexpr int k_maxCrew{15};
 constexpr int k_speed{10};
 constexpr size_t k_id{1};
 const std::string& k_name{"Black Perl"};
@@ -50,8 +50,7 @@ size_t Player::calcAvailableSpace()
 
 void Player::PayCrew(size_t money)
 {
-    std::cout << "Player::PayCrew\n";
-    if (money > money_) {
+    if (money < money_) {
         money_ -= money;
     }
     else {

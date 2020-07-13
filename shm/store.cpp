@@ -27,7 +27,7 @@ Store::~Store()
 
 void Store::nextDay()
 {
-    std::cout << "Store nextDay\n";
+    // std::cout << "Store nextDay\n";
     for (const auto& el : assortment_) {
         std::random_device rd;
         std::mt19937 gen(rd());

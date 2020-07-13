@@ -41,13 +41,13 @@ std::string Item::printRarity()
 
 void Item::nextDay()
 {
-    std::cout << "Item nextDay\n";
+    // std::cout << "Item nextDay\n";
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist6(0, 100);
     if (dist6(rng) > 90) {
         rarity_ = static_cast<Rarity>(static_cast<int>(rarity_) - 1);
-        std::cout << "Oh no! One of your crew member dropped your " << name_
-                  << "and it lost it`s rarity :( now it`s just " << printRarity() << '\n';
+        // std::cout << "Oh no! One of your crew member dropped your " << name_
+        //           << "and it lost it`s rarity :( now it`s just " << printRarity() << '\n';
     }
 }

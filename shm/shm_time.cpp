@@ -23,7 +23,7 @@ void Time::removeObserver(IObserver* observer)
 Time& Time::operator++()
 {
     elapsedTime_++;
-    std::cout << "operator " << observers_.size() << ' ' << getElapsedTime() << '\n';
+    // std::cout << "operator " << observers_.size() << ' ' << getElapsedTime() << '\n';
     for (const auto& observer : observers_) {
         observer->nextDay();
     }

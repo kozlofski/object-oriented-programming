@@ -29,6 +29,6 @@ bool Fruit::equals(const Cargo& rhs) const
 
 void Fruit::nextDay()
 {
-    std::cout << "Fruit nextDay\n";
+    // std::cout << "Fruit nextDay\n";
     Fruit::operator--();
 }
