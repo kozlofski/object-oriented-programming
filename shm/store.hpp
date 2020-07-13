@@ -35,6 +35,5 @@ private:
     const size_t maxAmount_{25};
 
     Cargo* findMatchCargo(Cargo* cargo);
-    void removeFromStore(Cargo* cargo);
     void generateCargo();
 };

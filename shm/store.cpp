@@ -98,10 +98,6 @@ void Store::listCargo()
 //     return nullptr;
 // }
 
-void Store::removeFromStore(Cargo* cargo)
-{
-}
-
 void Store::generateCargo()
 {
     std::random_device rd;

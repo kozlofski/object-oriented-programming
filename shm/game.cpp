@@ -69,12 +69,11 @@ void Game::printMenu() const
               << map_->getCurrentPosition()->getPosition()
               << '\n';
     printLine('*');
-    std::cout << '\n';
 }
 
 void Game::printOptions() const
 {
-    std::cout << "Choose number with action you wanna make\n\n";
+    std::cout << "\nChoose number with action you wanna make\n\n";
     std::cout << "1. Buy\n2. Sell\n3. Tavel\n4. Print cargo on ship\n5. Quit game\n\n";
     std::cout << "Your choice: ";
 }
@@ -92,8 +91,6 @@ Game::action Game::chooseOption() const
             printOptions();
         }
 
-        std::cout << '\n'
-                  << actionInput << '\n';
         if (!checkOptions(actionInput)) {
             resetScreen("You've chosen wrong number. Do it once again!\n");
             printOptions();
@@ -166,9 +163,9 @@ Island* Game::chooseIslandToTravel() const
 
             resetScreen("You've chosen wrong Island. Do it once again!");
 
-            std::cout << "Choose the island you want to go to:\n\n";
+            std::cout << "Choose the island you want to go to. [X Y]\n\n";
             std::cout << *map_;
-            std::cout << "Your choice -> X Y: ";
+            std::cout << "Your choice: ";
         }
         chosenIsland = map_->getIsland(Island::Coordinates(inputX, inputY));
 
@@ -202,30 +199,43 @@ void Game::increseDays(const size_t days)
 
 void Game::buy()
 {
+    resetScreen("BUY");
 }
 
 void Game::sell()
 {
+    resetScreen("SELL");
 }
 
 void Game::printCargo()
 {
+    std::string choice = "NO";
+    do {
+        resetScreen("CARGO ON SHIP");
+        player_->getShip()->printCargo();
+        std::cout << "Close window? [yes/no]: ";
+
+        while (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    } while (choice != "yes");
 }
 
 void Game::resetScreen() const
 {
-    // std::system("clear");
+    std::system("clear");
     printMenu();
 }
 
 void Game::resetScreen(const std::string& additionalInfo) const
 {
-    // std::system("clear");
+    std::system("clear");
+    printMenu();
     printLine('_');
     std::cout << "INFO: " << additionalInfo << '\n';
     printLine('_');
     std::cout << '\n';
-    printMenu();
 }
 
 void Game::printLine(char character) const

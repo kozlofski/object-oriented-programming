@@ -87,6 +87,14 @@ void Ship::load(std::shared_ptr<Cargo> cargo)
     cargo_.emplace_back(cargo);
 }
 
+void Ship::printCargo() const
+{
+    for (const auto& el : cargo_) {
+        el->print();
+        std::cout << '\n';
+    }
+}
+
 void Ship::nextDay()
 {
     // std::cout << "Ship nextDay\n";

@@ -12,7 +12,9 @@ public:
 
     //Override from Time::IObserver
     ~Alcohol() override = default;
+    void nextDay() override;
 
+    //Override from Cargo
     std::string getName() const override { return name_; }
     size_t getAmount() const override { return amount_; }
     size_t getBasePrice() const override { return basePrice_; }
@@ -20,9 +22,9 @@ public:
     {
         return basePrice_ * alcoholPower_ / maxPower;
     }
+    void print() const override;
 
-    //override from Time::IObserver
-    void nextDay() override;
+    size_t getAlcoholPower() const { return alcoholPower_; }
 
 private:
     size_t alcoholPower_{};

@@ -1,5 +1,6 @@
 #include "item.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <random>
 
@@ -17,26 +18,19 @@ bool Item::equals(const Cargo& rhs) const
             rarity_ == rItem->rarity_);
 }
 
-std::string Item::printRarity()
+std::string Item::getRarityName() const
 {
     switch (rarity_) {
-    case Rarity::common:
-        return "common";
-        break;
     case Rarity::epic:
         return "epic";
-        break;
     case Rarity::legendary:
         return "legendary";
-        break;
     case Rarity::rare:
         return "rare";
-        break;
+    case Rarity::common:
     default:
-        return "error: there`s no rarity";
-        break;
+        return "common";
     }
-    return "";
 }
 
 void Item::nextDay()
@@ -48,6 +42,13 @@ void Item::nextDay()
     if (dist6(rng) > 90) {
         rarity_ = static_cast<Rarity>(static_cast<int>(rarity_) - 1);
         // std::cout << "Oh no! One of your crew member dropped your " << name_
-        //           << "and it lost it`s rarity :( now it`s just " << printRarity() << '\n';
+        //           << "and it lost it`s rarity :( now it`s just " << getRarityName() << '\n';
     }
+}
+
+void Item::print() const
+{
+    std::cout << std::setw(10) << getName() << "   "
+              << std::setw(4) << getAmount() << " units   "
+              << std::setw(10) << getRarityName();
 }

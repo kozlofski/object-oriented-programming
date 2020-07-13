@@ -1,6 +1,7 @@
 
 #include "alcohol.hpp"
 
+#include <iomanip>
 #include <iostream>
 #include <random>
 #include <string>
@@ -30,4 +31,11 @@ void Alcohol::nextDay()
         // std::cout << "Oh no! Someone drank your alcohol and added water so no one would notice!"
         //           << "your alcohol lost it`s power :( now it`s " << alcoholPower_ << '\n';
     }
+}
+
+void Alcohol::print() const
+{
+    std::cout << std::setw(10) << getName() << "   "
+              << std::setw(4) << getAmount() << " units   "
+              << std::setw(4) << getAlcoholPower() << "%";
 }

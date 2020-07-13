@@ -58,10 +58,9 @@ void Map::travel(Island* destination)
 std::ostream&
 operator<<(std::ostream& output, const Map& map)
 {
-    size_t i = 1;
     for (const auto& island : map.islands_) {
         auto distanceToIsland = map.getDistanceToIsland(&island);
-        std::cout << std::setw(2) << i++ << ". " << island.getPosition()
+        std::cout << island.getPosition()
                   << " ---> Distance: " << distanceToIsland;
         if (distanceToIsland == 0) {
             std::cout << "   --------> You are here";
