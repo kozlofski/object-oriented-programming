@@ -35,7 +35,7 @@ public:
     Cargo* getCargo(size_t index) { return cargo_[index].get(); }
     std::vector<std::shared_ptr<Cargo>> getCargos() const { return cargo_; }
 
-    void load(Cargo* cargo, size_t amount);
+    void load(std::shared_ptr<Cargo> cargo);
     void unload(Cargo* cargo);
     void printCargo() const;
 

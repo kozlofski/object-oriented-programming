@@ -20,7 +20,8 @@ public:
     ~Store() override;
     void nextDay() override;
 
-    Cargo* getCargo(const size_t pos);
+    Cargo* getCargo(const size_t pos) const;
+    size_t getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const;
 
     Store::Response buy(Cargo* cargoInStore, size_t amount, Player* player);
     Store::Response sell(Cargo* cargo, size_t amount, Player* player);
@@ -36,4 +37,5 @@ private:
 
     //Cargo* findMatchCargo(Cargo* cargo);
     void generateCargo();
+    std::shared_ptr<Cargo> createCargo(Cargo* cargo, size_t amount);
 };

@@ -27,7 +27,7 @@ public:
 
     void setMoney(size_t newMoney) { money_ = newMoney; };
 
-    void purchaseCargo(Cargo* cargo, size_t price, size_t amount);
+    void purchaseCargo(std::shared_ptr<Cargo> cargo, size_t price);
 
 private:
     std::shared_ptr<Ship> ship_{};

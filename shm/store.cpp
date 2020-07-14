@@ -43,12 +43,17 @@ void Store::nextDay()
     }
 }
 
-Cargo* Store::getCargo(const size_t pos)
+Cargo* Store::getCargo(const size_t pos) const
 {
     if (pos > assortment_.size()) {
         return nullptr;
     }
     return assortment_[pos].get();
+}
+
+size_t Store::getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const
+{
+    return amount * cargoInStore->getPrice();
 }
 
 Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
@@ -68,7 +73,8 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
     }
 
     *cargoInStore -= amount;
-    player->purchaseCargo(cargoInStore, totalCharge, amount);
+    auto cargoToBuy = createCargo(cargoInStore, amount);
+    player->purchaseCargo(cargoToBuy, totalCharge);
     return Store::Response::done;
 }
 
@@ -84,7 +90,7 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
 
 void Store::listCargo()
 {
-    std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
+    std::for_each(assortment_.begin(), assortment_.end(), [i{1}](auto& cargo) mutable {
         std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units.\n";
     });
 }
@@ -159,4 +165,18 @@ void Store::generateCargo()
                                                  100 + 10 * priceDifference(gen),
                                                  timeObserver_,
                                                  static_cast<Item::Rarity>(1 + rarity(gen))));
+}
+
+std::shared_ptr<Cargo> Store::createCargo(Cargo* cargo, size_t amount)
+{
+    if (auto* alcohol = dynamic_cast<Alcohol*>(cargo)) {
+        return std::make_shared<Alcohol>(alcohol, amount);
+    }
+    else if (auto* fruit = dynamic_cast<Fruit*>(cargo)) {
+        return std::make_shared<Fruit>(fruit, amount);
+    }
+    else if (auto* item = dynamic_cast<Item*>(cargo)) {
+        return std::make_shared<Item>(item, amount);
+    }
+    return nullptr;
 }

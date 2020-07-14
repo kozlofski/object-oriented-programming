@@ -76,11 +76,11 @@ void Ship::unload(Cargo* cargo)
     }
 }
 
-void Ship::load(Cargo* cargo, size_t amount)
+void Ship::load(std::shared_ptr<Cargo> cargo)
 {
     for (const auto& el : cargo_) {
         if (*el == *cargo) {
-            *el += amount;
+            *el += cargo->getAmount();
             return;
         }
     }

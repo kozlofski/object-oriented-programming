@@ -58,10 +58,9 @@ void Player::PayCrew(size_t money)
     }
 };
 
-void Player::purchaseCargo(Cargo* cargo, size_t price, size_t amount)
+void Player::purchaseCargo(std::shared_ptr<Cargo> cargo, size_t price)
 {
-    availableSpace_ -= amount;
+    availableSpace_ -= cargo->getAmount();
     money_ -= price;
-
-    ship_->load(cargo, amount);
+    ship_->load(cargo);
 }

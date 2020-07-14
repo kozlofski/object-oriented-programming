@@ -199,17 +199,65 @@ void Game::increseDays(const size_t days)
 
 void Game::buy()
 {
-    int test = 0;
-    resetScreen("BUY");
+    do {
+        resetScreen("BUY");
 
+        auto store = map_->getCurrentPosition()->getStore();
+        Cargo* chosenCargo = chooseCargoToBuy(store);
+
+        if (!chosenCargo) {
+            return;
+        }
+
+        size_t amount = 0;
+        std::cout << "How many cargo do you wanna buy?\n";
+        while (!(std::cin >> amount)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            resetScreen("You've chosen wrong amount. Do it once again!\n");
+        }
+
+        std::cout << "You need to pay " << store->getCargoBuyPrice(chosenCargo, amount) << "$\n[yes/no]: ";
+        std::string choice = "no";
+        while (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+
+        if (choice != "yes") {
+            return;
+        }
+
+        auto response = store->buy(chosenCargo, amount, player_.get());
+        switch (response) {
+        case Store::Response::done:
+            std::cout << "You've just bought " << amount << " of " << chosenCargo->getName() << '\n';
+            break;
+        case Store::Response::lack_of_cargo:
+            std::cout << "Not enough cargo to buy!\n";
+            break;
+        case Store::Response::lack_of_money:
+            std::cout << "You do not have enough money!\n";
+            break;
+        case Store::Response::lack_of_space:
+            std::cout << "You do not have enough space for the cargo!\n";
+            break;
+        default:
+            break;
+        }
+    } while (chooseCloseWindow());
+}
+
+Cargo* Game::chooseCargoToBuy(std::shared_ptr<Store> store) const
+{
     size_t cargoPosition = 0;
-    size_t amount = 0;
     Cargo* chosenCargo = nullptr;
 
     do {
         std::cout << "Choose cargo you want to buy:\n\n";
         //TODO: change to operator<<
-        map_->getCurrentPosition()->getStore()->listCargo();
+        store->listCargo();
+        std::cout << "\n0     Cancel\n";
 
         std::cout << "Your choice: ";
         while (!(std::cin >> cargoPosition)) {
@@ -219,27 +267,22 @@ void Game::buy()
             resetScreen("You've chosen wrong cargo. Do it once again!");
 
             std::cout << "Choose cargo you want to buy:\n\n";
-            map_->getCurrentPosition()->getStore()->listCargo();
+            store->listCargo();
             std::cout << "Your choice: ";
         }
 
-        chosenCargo = map_->getCurrentPosition()->getStore()->getCargo(cargoPosition);
+        if (cargoPosition == 0) {
+            return nullptr;
+        }
+
+        chosenCargo = store->getCargo(--cargoPosition);
 
         if (!chosenCargo) {
             resetScreen("You've chosen wrong cargo. Do it once again!");
         }
     } while (!chosenCargo);
 
-    std::cout << "How many cargo you wanna buy?\n";
-    while (!(std::cin >> amount)) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        resetScreen("You've chosen wrong amount. Do it once again!\n");
-    }
-
-    map_->getCurrentPosition()->getStore()->buy(chosenCargo, amount, player_.get());
-
-    std::cin >> test;
+    return chosenCargo;
 }
 
 void Game::sell()
@@ -249,17 +292,10 @@ void Game::sell()
 
 void Game::printCargo()
 {
-    std::string choice = "no";
     do {
         resetScreen("CARGO ON SHIP");
         player_->getShip()->printCargo();
-        std::cout << "Close window? [yes/no]: ";
-
-        while (!(std::cin >> choice)) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-    } while (choice != "yes");
+    } while (chooseCloseWindow());
 }
 
 void Game::resetScreen() const
@@ -282,4 +318,15 @@ void Game::printLine(char character) const
 {
     std::string line(80, character);
     std::cout << line << '\n';
+}
+
+bool Game::chooseCloseWindow() const
+{
+    std::cout << "\nClose window? [yes/no]: ";
+    std::string choice = "no";
+    while (!(std::cin >> choice)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    return (choice != "yes");
 }

@@ -47,9 +47,11 @@ private:
     size_t countTravelTime(const Island* islandToTravel);
     void increseDays(const size_t days);
     void buy();
+    Cargo* chooseCargoToBuy(std::shared_ptr<Store> store) const;
     void sell();
     void printCargo();
     void resetScreen() const;
     void resetScreen(const std::string& additionalInfo) const;
     void printLine(char character) const;
+    bool chooseCloseWindow() const;
 };
