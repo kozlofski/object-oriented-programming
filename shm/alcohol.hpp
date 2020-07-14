@@ -9,6 +9,7 @@ class Time;
 class Alcohol : public Cargo {
 public:
     Alcohol(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t alcoholPower);
+    Alcohol(Alcohol* alcohol, size_t amount);
 
     //Override from Time::IObserver
     ~Alcohol() override = default;

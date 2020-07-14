@@ -7,6 +7,7 @@ class Time;
 class Fruit : public Cargo {
 public:
     Fruit(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t timeToExpire);
+    Fruit(Fruit* fruit, size_t amount);
 
     //Override from Time::IObserver
     ~Fruit() override = default;

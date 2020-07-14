@@ -7,9 +7,10 @@
 #include <string>
 
 Alcohol::Alcohol(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t alcoholPower)
-    : Cargo(name, amount, basePrice, timeObserver), alcoholPower_(alcoholPower)
-{
-}
+    : Cargo(name, amount, basePrice, timeObserver), alcoholPower_(alcoholPower) {}
+
+Alcohol::Alcohol(Alcohol* alcohol, size_t amount)
+    : Alcohol(alcohol->getName(), amount, alcohol->getBasePrice(), alcohol->timeObserver_, alcohol->getAlcoholPower()) {}
 
 bool Alcohol::equals(const Cargo& rhs) const
 {

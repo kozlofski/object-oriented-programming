@@ -14,6 +14,7 @@ public:
     };
 
     Item(std::string name, size_t amount, size_t basePrice, Time* timeObserver, Rarity rarity);
+    Item(Item* item, size_t amount);
 
     //Override from Time::IObserver
     ~Item() override = default;

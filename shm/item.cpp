@@ -7,6 +7,9 @@
 Item::Item(std::string name, size_t amount, size_t basePrice, Time* timeObserver, Rarity rarity)
     : Cargo(name, amount, basePrice, timeObserver), rarity_(rarity) {}
 
+Item::Item(Item* item, size_t amount)
+    : Item(item->getName(), amount, item->getBasePrice(), item->timeObserver_, item->rarity_) {}
+
 bool Item::equals(const Cargo& rhs) const
 {
     const Item* rItem = dynamic_cast<const Item*>(&rhs);
