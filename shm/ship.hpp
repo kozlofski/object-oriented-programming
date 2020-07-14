@@ -37,8 +37,7 @@ public:
 
     void load(std::shared_ptr<Cargo> cargo);
     void unload(Cargo* cargo);
-
-    void setDelegate(Delegate* delegate) { delegatePlayer_ = delegate; }
+    void printCargo() const;
 
     // Override from Time::IObserver
     void nextDay() override;

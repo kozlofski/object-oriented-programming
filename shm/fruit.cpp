@@ -1,11 +1,13 @@
 #include "fruit.hpp"
 
+#include <iomanip>
 #include <iostream>
 
 Fruit::Fruit(std::string name, size_t amount, size_t basePrice, Time* timeObserver, size_t timeToExpire)
-    : Cargo(name, amount, basePrice, timeObserver), timeToExpire_(timeToExpire)
-{
-}
+    : Cargo(name, amount, basePrice, timeObserver), timeToExpire_(timeToExpire) {}
+
+Fruit::Fruit(Fruit* fruit, size_t amount)
+    : Fruit(fruit->getName(), amount, fruit->getBasePrice(), fruit->timeObserver_, fruit->getTimeToExpire()) {}
 
 Fruit& Fruit::operator--()
 {
@@ -29,6 +31,13 @@ bool Fruit::equals(const Cargo& rhs) const
 
 void Fruit::nextDay()
 {
-    std::cout << "Fruit nextDay\n";
+    // std::cout << "Fruit nextDay\n";
     Fruit::operator--();
+}
+
+void Fruit::print() const
+{
+    std::cout << std::setw(10) << getName() << "   "
+              << std::setw(4) << getAmount() << " units   "
+              << std::setw(4) << getTimeToExpire() << " days";
 }

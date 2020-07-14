@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <memory>
-
 #include "cargo.hpp"
 #include "ship.hpp"
 
@@ -27,6 +26,10 @@ public:
     Cargo* getCargo(size_t index) const { return ship_->getCargo(index); };
 
     void setMoney(size_t newMoney) { money_ = newMoney; };
+
+    void printCargo() const;
+    void purchaseCargo(std::shared_ptr<Cargo> cargo, size_t price);
+    void sellCargo(Cargo* cargo, size_t price);
 
 private:
     std::shared_ptr<Ship> ship_{};

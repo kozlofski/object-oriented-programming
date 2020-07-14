@@ -20,9 +20,11 @@ public:
     ~Store() override;
     void nextDay() override;
 
-    Cargo* getCargo(const size_t pos);
-    void generateCargo();
-    Store::Response buy(Cargo* cargo, size_t amount, Player* player);  //private?
+    Cargo* getCargo(const size_t pos) const;
+    size_t getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const;
+    size_t getCargoSellPrice(Cargo* cargoInStore, size_t amount) const;
+
+    Store::Response buy(Cargo* cargoInStore, size_t amount, Player* player);
     Store::Response sell(Cargo* cargo, size_t amount, Player* player);
 
     void listCargo();
@@ -30,9 +32,11 @@ public:
 private:
     Time* timeObserver_{};
     std::vector<std::shared_ptr<Cargo>> assortment_{};
-    const size_t maxCargo_ = 10;
-    const size_t maxAmount = 25;
 
-    Cargo* findMatchCargo(Cargo* cargo);
-    void removeFromStore(Cargo* cargo);
+    const size_t maxCargo_{10};
+    const size_t maxAmount_{25};
+
+    Cargo* findMatchCargo(Cargo* cargo) const;
+    void generateCargo();
+    std::shared_ptr<Cargo> createCargo(Cargo* cargo, size_t amount);
 };

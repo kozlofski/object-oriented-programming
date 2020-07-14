@@ -14,9 +14,11 @@ public:
     };
 
     Item(std::string name, size_t amount, size_t basePrice, Time* timeObserver, Rarity rarity);
+    Item(Item* item, size_t amount);
 
     //Override from Time::IObserver
     ~Item() override = default;
+    void nextDay() override;
 
     // override from Cargo
     std::string getName() const override { return name_; }
@@ -26,11 +28,9 @@ public:
     {
         return basePrice_ * static_cast<int>(rarity_);
     }
+    void print() const override;
 
-    //override from Time::IObserver
-    void nextDay() override;
-
-    std::string printRarity();
+    std::string getRarityName() const;
 
 private:
     Rarity rarity_{};

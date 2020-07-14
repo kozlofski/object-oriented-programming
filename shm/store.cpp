@@ -13,9 +13,9 @@ Store::Store(Time* timeObserver)
     : timeObserver_(timeObserver)
 {
     if (timeObserver_) {
-        generateCargo();
         timeObserver_->addObserver(this);
     }
+    generateCargo();
 }
 
 Store::~Store()
@@ -27,19 +27,23 @@ Store::~Store()
 
 void Store::nextDay()
 {
-    std::cout << "Store nextDay\n";
+    // std::cout << "Store nextDay\n";
     for (const auto& el : assortment_) {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<std::mt19937::result_type> dist6(-10, 10);
-        if (auto check = dist6(rd); el->getAmount() < check) {
-            *(el) -= (el->getAmount() + 1);
+        auto diff = dist6(rd);
+
+        if (diff < 0) {
+            *(el) -= -(diff);
         }
-        *(el) += dist6(rd);
+        else {
+            *(el) += diff;
+        }
     }
 }
 
-Cargo* Store::getCargo(const size_t pos)
+Cargo* Store::getCargo(const size_t pos) const
 {
     if (pos > assortment_.size()) {
         return nullptr;
@@ -47,21 +51,39 @@ Cargo* Store::getCargo(const size_t pos)
     return assortment_[pos].get();
 }
 
+size_t Store::getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const
+{
+    return amount * cargoInStore->getPrice();
+}
+
+size_t Store::getCargoSellPrice(Cargo* cargoInStore, size_t amount) const
+{
+    auto* foundCargo = findMatchCargo(cargoInStore);
+    if (foundCargo) {
+        return amount * foundCargo->getPrice();
+    }
+    return amount * cargoInStore->getPrice();
+}
+
 Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
 {
     if (amount > player->getAvailableSpace()) {
         return Response::lack_of_space;
     }
+
     if (amount > cargoInStore->getAmount()) {
         return Response::lack_of_cargo;
     }
 
-    size_t totalCharge = amount * cargoInStore->getPrice();
+    size_t totalCharge = getCargoBuyPrice(cargoInStore, amount);
     size_t playersMoney = player->getMoney();
     if (totalCharge > playersMoney) {
         return Response::lack_of_money;
     }
-    player->setMoney(playersMoney - totalCharge);
+
+    *cargoInStore -= amount;
+    auto cargoToBuy = createCargo(cargoInStore, amount);
+    player->purchaseCargo(cargoToBuy, totalCharge);
     return Store::Response::done;
 }
 
@@ -70,90 +92,113 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
     if (amount > cargoOnShip->getAmount()) {
         return Response::lack_of_cargo;
     }
-    size_t totalCharge = amount * cargoOnShip->getPrice();
-    player->setMoney(player->getMoney() + (amount * cargoOnShip->getPrice()));
+
+    size_t totalPrice{0};
+    auto* foundCargo = findMatchCargo(cargoOnShip);
+    if (foundCargo) {
+        totalPrice = getCargoSellPrice(foundCargo, amount);
+        *foundCargo += amount;
+    }
+    else {
+        assortment_.push_back(createCargo(cargoOnShip, 0));
+        auto* foundNewCargo = findMatchCargo(cargoOnShip);
+        totalPrice = getCargoSellPrice(foundNewCargo, amount);
+        *foundNewCargo += amount;
+    }
+    *cargoOnShip -= amount;
+    player->sellCargo(cargoOnShip, totalPrice);
     return Store::Response::done;
 }
 
 void Store::listCargo()
 {
-    std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
+    std::for_each(assortment_.begin(), assortment_.end(), [i{1}](auto& cargo) mutable {
         std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units.\n";
     });
 }
 
-// Cargo* Store::findMatchCargo(Cargo* cargo) {
-//     auto found = std::find(assortment_.begin(), assortment_.end(), [&cargo](auto& elem) {
-//         return (elem.get()->getName() == cargo->getName() &&
-//                 elem.get()->getBasePrice() == cargo->getBasePrice() &&
-//                 elem.get()->getPrice() == cargo->getPrice());
-//     });
-//     if (found != assortment_.end()) {
-//         return (*found).get();
-//     }
-//     return nullptr;
-// }
-
-void Store::removeFromStore(Cargo* cargo)
+Cargo* Store::findMatchCargo(Cargo* cargo) const
 {
+    auto found = std::find_if(assortment_.begin(), assortment_.end(), [cargo](const auto& elem) {
+        return (*elem == *cargo);
+    });
+    if (found != assortment_.end()) {
+        return (*found).get();
+    }
+    return nullptr;
 }
 
 void Store::generateCargo()
 {
     std::random_device rd;
     std::mt19937 gen(rd());
-    // normal distribution
-    std::normal_distribution<> amount(30, 15);
-    std::normal_distribution<> priceDifference(0, 2);
-    std::normal_distribution<> expiry(6, 1);
-    std::normal_distribution<> alcoholPower(0, 5);
-    std::normal_distribution<> rarity(0, 3);
+
+    std::uniform_int_distribution<size_t> amount(15, 45);
+    std::uniform_int_distribution<size_t> priceDifference(0, 4);
+    std::uniform_int_distribution<size_t> expiry(6, 9);
+    std::uniform_int_distribution<size_t> alcoholPower(0, 10);
+    std::uniform_int_distribution<size_t> rarity(0, 3);
+    std::uniform_int_distribution<size_t> amountRareItem(1, 3);
 
     assortment_.push_back(std::make_shared<Fruit>("Bananas",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  10 + static_cast<size_t>(priceDifference(gen)),
+                                                  amount(gen),
+                                                  10 + priceDifference(gen),
                                                   timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
+                                                  expiry(gen)));
     assortment_.push_back(std::make_shared<Fruit>("Oranges",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  12 + static_cast<size_t>(priceDifference(gen)),
+                                                  amount(gen),
+                                                  12 + priceDifference(gen),
                                                   timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
+                                                  expiry(gen)));
     assortment_.push_back(std::make_shared<Fruit>("Apples",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  14 + static_cast<size_t>(priceDifference(gen)),
+                                                  amount(gen),
+                                                  14 + priceDifference(gen),
                                                   timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
+                                                  expiry(gen)));
     assortment_.push_back(std::make_shared<Fruit>("Pears",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  15 + static_cast<size_t>(priceDifference(gen)),
+                                                  amount(gen),
+                                                  15 + priceDifference(gen),
                                                   timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
+                                                  expiry(gen)));
 
     assortment_.push_back(std::make_shared<Alcohol>("Rum",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    80 + static_cast<size_t>(priceDifference(gen)),
+                                                    amount(gen),
+                                                    80 + priceDifference(gen),
                                                     timeObserver_,
-                                                    50 + static_cast<size_t>(alcoholPower(gen))));
+                                                    45 + alcoholPower(gen)));
     assortment_.push_back(std::make_shared<Alcohol>("Vodka",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    60 + static_cast<size_t>(priceDifference(gen)),
+                                                    amount(gen),
+                                                    60 + priceDifference(gen),
                                                     timeObserver_,
-                                                    40 + static_cast<size_t>(alcoholPower(gen))));
+                                                    40 + alcoholPower(gen)));
     assortment_.push_back(std::make_shared<Alcohol>("Absinth",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    80 + static_cast<size_t>(priceDifference(gen)),
+                                                    amount(gen),
+                                                    80 + priceDifference(gen),
                                                     timeObserver_,
-                                                    70 + static_cast<size_t>(alcoholPower(gen))));
+                                                    65 + alcoholPower(gen)));
     assortment_.push_back(std::make_shared<Alcohol>("Wine",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    70 + static_cast<size_t>(priceDifference(gen)),
+                                                    amount(gen),
+                                                    70 + priceDifference(gen),
                                                     timeObserver_,
-                                                    12 + static_cast<size_t>(alcoholPower(gen))));
+                                                    10 + alcoholPower(gen)));
 
     assortment_.push_back(std::make_shared<Item>("Sword",
-                                                 1,
-                                                 100 + 10 * static_cast<size_t>(priceDifference(gen)),
+                                                 amountRareItem(gen),
+                                                 100 + 10 * priceDifference(gen),
                                                  timeObserver_,
-                                                 static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
+                                                 static_cast<Item::Rarity>(1 + rarity(gen))));
+}
+
+std::shared_ptr<Cargo> Store::createCargo(Cargo* cargo, size_t amount)
+{
+    if (auto* alcohol = dynamic_cast<Alcohol*>(cargo)) {
+        return std::make_shared<Alcohol>(alcohol, amount);
+    }
+    else if (auto* fruit = dynamic_cast<Fruit*>(cargo)) {
+        return std::make_shared<Fruit>(fruit, amount);
+    }
+    else if (auto* item = dynamic_cast<Item*>(cargo)) {
+        return std::make_shared<Item>(item, amount);
+    }
+    return nullptr;
 }

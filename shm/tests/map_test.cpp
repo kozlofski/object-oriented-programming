@@ -6,5 +6,5 @@
 
 TEST(mapTest, ConstructorAndGettersTest)
 {
-    Map mapTest;
+    Map mapTest(nullptr);
 }

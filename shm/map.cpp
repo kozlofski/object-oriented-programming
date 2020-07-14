@@ -1,16 +1,18 @@
 #include "map.hpp"
 
 #include <algorithm>
+#include <iomanip>
 #include <random>
 #include <vector>
 
-Map::Map()
+Map::Map(Time* timeObserver)
 {
     islands_.reserve(totalIslands);
-    generateIsland(totalIslands);
+    generateIsland(totalIslands, timeObserver);
+    currentPosition_ = &islands_.front();
 }
 
-void Map::generateIsland(size_t howMany)
+void Map::generateIsland(size_t howMany, Time* timeObserver)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -26,7 +28,7 @@ void Map::generateIsland(size_t howMany)
         } while (std::any_of(islands_.begin(), islands_.end(), [=](auto island) {
             return island.getPosition() == Island::Coordinates(newX, newY);
         }));
-        islands_.emplace_back(newX, newY);
+        islands_.emplace_back(newX, newY, timeObserver);
     }
 }
 
@@ -41,4 +43,29 @@ Island* Map::getIsland(const Island::Coordinates& coordinates)
         return &*foundIsland;
     }
     return nullptr;
+}
+
+size_t Map::getDistanceToIsland(const Island* destination) const
+{
+    return Island::Coordinates::distance(getCurrentPosition()->getPosition(), destination->getPosition());
+}
+
+void Map::travel(Island* destination)
+{
+    currentPosition_ = destination;
+}
+
+std::ostream&
+operator<<(std::ostream& output, const Map& map)
+{
+    for (const auto& island : map.islands_) {
+        auto distanceToIsland = map.getDistanceToIsland(&island);
+        std::cout << island.getPosition()
+                  << " ---> Distance: " << distanceToIsland;
+        if (distanceToIsland == 0) {
+            std::cout << "   --------> You are here";
+        }
+        std::cout << '\n';
+    }
+    return output;
 }
