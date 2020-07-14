@@ -22,6 +22,7 @@ public:
 
     Cargo* getCargo(const size_t pos) const;
     size_t getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const;
+    size_t getCargoSellPrice(Cargo* cargoInStore, size_t amount) const;
 
     Store::Response buy(Cargo* cargoInStore, size_t amount, Player* player);
     Store::Response sell(Cargo* cargo, size_t amount, Player* player);
@@ -35,7 +36,7 @@ private:
     const size_t maxCargo_{10};
     const size_t maxAmount_{25};
 
-    //Cargo* findMatchCargo(Cargo* cargo);
+    Cargo* findMatchCargo(Cargo* cargo) const;
     void generateCargo();
     std::shared_ptr<Cargo> createCargo(Cargo* cargo, size_t amount);
 };

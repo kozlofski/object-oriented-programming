@@ -49,6 +49,8 @@ private:
     void buy();
     Cargo* chooseCargoToBuy(std::shared_ptr<Store> store) const;
     void sell();
+    Cargo* chooseCargoToSell() const;
+    void sellPrintCargos() const;
     void printCargo();
     void resetScreen() const;
     void resetScreen(const std::string& additionalInfo) const;

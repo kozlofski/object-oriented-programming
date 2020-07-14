@@ -58,20 +58,11 @@ Ship& Ship::operator-=(const size_t crew)
 
 void Ship::unload(Cargo* cargo)
 {
-    auto it = std::find_if(cargo_.begin(), cargo_.end(), [cargo](const std::shared_ptr<Cargo> ptr) {
-        return *ptr == *cargo;
-    });
-    if (it == cargo_.end()) {
-        std::cerr << "yerr we couldnt find this cargo comrade!\n";
-        return;
-    }
-    if ((*it)->getAmount() < cargo->getAmount()) {
-        std::cerr << "cargo would be negative\n";
-        return;
-    }
-    *(*it) -= (cargo->getAmount());
-    if ((*it)->getAmount() == 0) {
-        cargo_.erase(it);
+    if (cargo->getAmount() == 0) {
+        cargo_.erase(std::find_if(std::begin(cargo_), std::end(cargo_),
+                                  [cargo](const auto& el) {
+                                      return *el == *cargo;
+                                  }));
         cargo_.shrink_to_fit();
     }
 }
@@ -89,7 +80,9 @@ void Ship::load(std::shared_ptr<Cargo> cargo)
 
 void Ship::printCargo() const
 {
+    size_t i{1};
     for (const auto& el : cargo_) {
+        std::cout << i++;
         el->print();
         std::cout << '\n';
     }

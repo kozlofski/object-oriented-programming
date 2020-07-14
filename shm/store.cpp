@@ -56,6 +56,15 @@ size_t Store::getCargoBuyPrice(Cargo* cargoInStore, size_t amount) const
     return amount * cargoInStore->getPrice();
 }
 
+size_t Store::getCargoSellPrice(Cargo* cargoInStore, size_t amount) const
+{
+    auto* foundCargo = findMatchCargo(cargoInStore);
+    if (foundCargo) {
+        return amount * foundCargo->getPrice();
+    }
+    return amount * cargoInStore->getPrice();
+}
+
 Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
 {
     if (amount > player->getAvailableSpace()) {
@@ -66,7 +75,7 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
         return Response::lack_of_cargo;
     }
 
-    size_t totalCharge = amount * cargoInStore->getPrice();
+    size_t totalCharge = getCargoBuyPrice(cargoInStore, amount);
     size_t playersMoney = player->getMoney();
     if (totalCharge > playersMoney) {
         return Response::lack_of_money;
@@ -83,8 +92,21 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
     if (amount > cargoOnShip->getAmount()) {
         return Response::lack_of_cargo;
     }
-    size_t totalCharge = amount * cargoOnShip->getPrice();
-    player->setMoney(player->getMoney() + (amount * cargoOnShip->getPrice()));
+
+    size_t totalPrice{0};
+    auto* foundCargo = findMatchCargo(cargoOnShip);
+    if (foundCargo) {
+        totalPrice = getCargoSellPrice(foundCargo, amount);
+        *foundCargo += amount;
+    }
+    else {
+        assortment_.push_back(createCargo(cargoOnShip, 0));
+        auto* foundNewCargo = findMatchCargo(cargoOnShip);
+        totalPrice = getCargoSellPrice(foundNewCargo, amount);
+        *foundNewCargo += amount;
+    }
+    *cargoOnShip -= amount;
+    player->sellCargo(cargoOnShip, totalPrice);
     return Store::Response::done;
 }
 
@@ -95,16 +117,16 @@ void Store::listCargo()
     });
 }
 
-// Cargo* Store::findMatchCargo(Cargo* cargo)
-// {
-//     auto found = std::find(assortment_.begin(), assortment_.end(), [&cargo](auto& elem) {
-//         return (elem->getName() == cargo->getName());
-//     });
-//     if (found != assortment_.end()) {
-//         return (*found).get();
-//     }
-//     return nullptr;
-// }
+Cargo* Store::findMatchCargo(Cargo* cargo) const
+{
+    auto found = std::find_if(assortment_.begin(), assortment_.end(), [cargo](const auto& elem) {
+        return (*elem == *cargo);
+    });
+    if (found != assortment_.end()) {
+        return (*found).get();
+    }
+    return nullptr;
+}
 
 void Store::generateCargo()
 {

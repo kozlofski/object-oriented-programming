@@ -287,14 +287,106 @@ Cargo* Game::chooseCargoToBuy(std::shared_ptr<Store> store) const
 
 void Game::sell()
 {
-    resetScreen("SELL");
+    do {
+        resetScreen("SELL");
+        Cargo* chosenCargo = chooseCargoToSell();
+
+        if (!chosenCargo) {
+            return;
+        }
+
+        size_t amount = 0;
+        std::cout << "How many cargo do you wanna sell?\n";
+        while (!(std::cin >> amount)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            resetScreen("You've chosen wrong amount. Do it once again!\n");
+        }
+
+        auto cargoName = chosenCargo->getName();
+        auto store = map_->getCurrentPosition()->getStore();
+        std::cout << "You're gonna sell " << amount << " of " << cargoName << " for "
+                  << store->getCargoSellPrice(chosenCargo, amount) << "$\n[yes/no]: ";
+        std::string choice = "no";
+        while (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+
+        if (choice != "yes") {
+            return;
+        }
+
+        auto response = store->sell(chosenCargo, amount, player_.get());
+        switch (response) {
+        case Store::Response::done:
+            std::cout << "You've just sold " << amount << " of " << cargoName << '\n';
+            break;
+        case Store::Response::lack_of_cargo:
+            std::cout << "Not enough cargo to sell!\n";
+            break;
+        default:
+            break;
+        }
+
+    } while (chooseCloseWindow());
+}
+
+Cargo* Game::chooseCargoToSell() const
+{
+    size_t cargoPosition = 0;
+    Cargo* chosenCargo = nullptr;
+
+    do {
+        sellPrintCargos();
+        std::cout << "Choose cargo you want to sell:\n\n";
+
+        std::cout << "Your choice: ";
+        while (!(std::cin >> cargoPosition)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            resetScreen("You've chosen wrong cargo. Do it once again!");
+
+            std::cout << "Choose cargo you want to buy:\n\n";
+            sellPrintCargos();
+            std::cout << "Your choice: ";
+        }
+
+        if (cargoPosition == 0) {
+            return nullptr;
+        }
+
+        chosenCargo = player_->getShip()->getCargo(--cargoPosition);
+
+        if (!chosenCargo) {
+            resetScreen("You've chosen wrong cargo. Do it once again!");
+        }
+    } while (!chosenCargo);
+
+    return chosenCargo;
+}
+
+void Game::sellPrintCargos() const
+{
+    printLine('~');
+    std::cout << "CARGO ON SHIP\n";
+    printLine('~');
+    player_->printCargo();
+    auto store = map_->getCurrentPosition()->getStore();
+    std::cout << '\n';
+    printLine('~');
+    std::cout << "CARGO IN STORE\n";
+    printLine('~');
+    store->listCargo();
+    std::cout << "\n0     Cancel\n";
 }
 
 void Game::printCargo()
 {
     do {
         resetScreen("CARGO ON SHIP");
-        player_->getShip()->printCargo();
+        player_->printCargo();
     } while (chooseCloseWindow());
 }
 
