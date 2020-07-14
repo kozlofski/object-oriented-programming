@@ -1,6 +1,7 @@
 #include "store.hpp"
 
 #include <algorithm>
+#include <array>
 #include <memory>
 #include <random>
 
@@ -10,23 +11,20 @@
 #include "item.hpp"
 
 Store::Store(Time* timeObserver)
-    : timeObserver_(timeObserver)
-{
+    : timeObserver_(timeObserver) {
     if (timeObserver_) {
         generateCargo();
         timeObserver_->addObserver(this);
     }
 }
 
-Store::~Store()
-{
+Store::~Store() {
     if (timeObserver_) {
         timeObserver_->removeObserver(this);
     }
 }
 
-void Store::nextDay()
-{
+void Store::nextDay() {
     std::cout << "Store nextDay\n";
     for (const auto& el : assortment_) {
         std::random_device rd;
@@ -39,16 +37,14 @@ void Store::nextDay()
     }
 }
 
-Cargo* Store::getCargo(const size_t pos)
-{
+Cargo* Store::getCargo(const size_t pos) {
     if (pos > assortment_.size()) {
         return nullptr;
     }
     return assortment_[pos].get();
 }
 
-Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
-{
+Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player) {
     if (amount > player->getAvailableSpace()) {
         return Response::lack_of_space;
     }
@@ -65,8 +61,7 @@ Store::Response Store::buy(Cargo* cargoInStore, size_t amount, Player* player)
     return Store::Response::done;
 }
 
-Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
-{
+Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player) {
     if (amount > cargoOnShip->getAmount()) {
         return Response::lack_of_cargo;
     }
@@ -75,8 +70,7 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player)
     return Store::Response::done;
 }
 
-void Store::listCargo()
-{
+void Store::listCargo() {
     std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
         std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units.\n";
     });
@@ -94,66 +88,56 @@ void Store::listCargo()
 //     return nullptr;
 // }
 
-void Store::removeFromStore(Cargo* cargo)
-{
+void Store::removeFromStore(Cargo* cargo) {
 }
 
-void Store::generateCargo()
-{
+void Store::generateAssortment(std::array<Store::AssortmentPrototype, 9> ass_pro) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    // normal distribution
-    std::normal_distribution<> amount(30, 15);
-    std::normal_distribution<> priceDifference(0, 2);
-    std::normal_distribution<> expiry(6, 1);
-    std::normal_distribution<> alcoholPower(0, 5);
-    std::normal_distribution<> rarity(0, 3);
+    std::normal_distribution<> basePriceDifference(0, 2);
 
-    assortment_.push_back(std::make_shared<Fruit>("Bananas",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  10 + static_cast<size_t>(priceDifference(gen)),
-                                                  timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Oranges",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  12 + static_cast<size_t>(priceDifference(gen)),
-                                                  timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Apples",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  14 + static_cast<size_t>(priceDifference(gen)),
-                                                  timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
-    assortment_.push_back(std::make_shared<Fruit>("Pears",
-                                                  static_cast<size_t>(amount(gen)),
-                                                  15 + static_cast<size_t>(priceDifference(gen)),
-                                                  timeObserver_,
-                                                  static_cast<size_t>(expiry(gen))));
+    for (auto& cargo : ass_pro) {
+        if (cargo.type_ == "Fruit") {
+            std::normal_distribution<> amount(30, 15);
+            std::normal_distribution<> expiry(cargo.feature_, 1);
+            assortment_.push_back(std::make_shared<Fruit>(cargo.name_,
+                                                          static_cast<size_t>(std::abs(amount(gen))),
+                                                          cargo.basePrice_ + static_cast<size_t>(basePriceDifference(gen)),
+                                                          timeObserver_,
+                                                          static_cast<size_t>(std::abs(expiry(gen)))));
+        }
+        if (cargo.type_ == "Alcohol") {
+            std::normal_distribution<> amount(15, 5);
+            std::normal_distribution<> alcoholPower(cargo.feature_, 5);
+            assortment_.push_back(std::make_shared<Alcohol>(cargo.name_,
+                                                            static_cast<size_t>(std::abs(amount(gen))),
+                                                            cargo.basePrice_ + static_cast<size_t>(basePriceDifference(gen)),
+                                                            timeObserver_,
+                                                            static_cast<size_t>(std::abs(alcoholPower(gen)))));
+        }
+        if (cargo.type_ == "Item") {
+            std::normal_distribution<> rarity(0, 3);
+            assortment_.push_back(std::make_shared<Item>(cargo.name_,
+                                                         1,
+                                                         100 + 10 * static_cast<size_t>(basePriceDifference(gen)),
+                                                         timeObserver_,
+                                                         static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
+        }
+    }
+}
 
-    assortment_.push_back(std::make_shared<Alcohol>("Rum",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    80 + static_cast<size_t>(priceDifference(gen)),
-                                                    timeObserver_,
-                                                    50 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Vodka",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    60 + static_cast<size_t>(priceDifference(gen)),
-                                                    timeObserver_,
-                                                    40 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Absinth",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    80 + static_cast<size_t>(priceDifference(gen)),
-                                                    timeObserver_,
-                                                    70 + static_cast<size_t>(alcoholPower(gen))));
-    assortment_.push_back(std::make_shared<Alcohol>("Wine",
-                                                    static_cast<size_t>(amount(gen)),
-                                                    70 + static_cast<size_t>(priceDifference(gen)),
-                                                    timeObserver_,
-                                                    12 + static_cast<size_t>(alcoholPower(gen))));
+void Store::generateCargo() {
+    std::array<AssortmentPrototype, 9> ass_pro = {
+        Store::AssortmentPrototype{"Fruit", "Bananas", 10, 8},
+        Store::AssortmentPrototype{"Fruit", "Oranges", 12, 9},
+        Store::AssortmentPrototype{"Fruit", "Apples", 14, 12},
+        Store::AssortmentPrototype{"Fruit", "Pears", 15, 13},
+        Store::AssortmentPrototype{"Alcohol", "Rum", 80, 60},
+        Store::AssortmentPrototype{"Alcohol", "Vodka", 60, 45},
+        Store::AssortmentPrototype{"Alcohol", "Absinth", 80, 60},
+        Store::AssortmentPrototype{"Alcohol", "Wine", 70, 15},
+        Store::AssortmentPrototype{"Item", "Sword", 100, 0},
+    };
 
-    assortment_.push_back(std::make_shared<Item>("Sword",
-                                                 1,
-                                                 100 + 10 * static_cast<size_t>(priceDifference(gen)),
-                                                 timeObserver_,
-                                                 static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
+    generateAssortment(ass_pro);
 }

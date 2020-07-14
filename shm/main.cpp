@@ -1,5 +1,7 @@
 
 
+#include <string>
+
 #include "alcohol.hpp"
 #include "cargo.hpp"
 #include "fruit.hpp"
@@ -9,10 +11,7 @@
 #include "shm_time.hpp"
 #include "store.hpp"
 
-#include <string>
-
-int main()
-{
+int main() {
     Time t;
 
     Fruit f{"Apple", 100, 20, &t, 100};
@@ -21,13 +20,13 @@ int main()
 
     Player p{500, &t};
 
-    // Store st{&t};
-    // st.listCargo();
+    Store st{&t};
+    st.listCargo();
 
     ++t;
-    // st.listCargo();
+    st.listCargo();
     ++t;
-    // st.listCargo();
+    st.listCargo();
 
     return 0;
 }
