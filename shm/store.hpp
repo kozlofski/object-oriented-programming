@@ -25,11 +25,9 @@ public:
 
     void listCargo();
 
-    //friend std::ostream& operator<<(std::ostream& out, const Cargo& cargo);
     friend std::ostream& operator<<(std::ostream& out, const Store& store);
 
 private:
-    // Time* time_;
     std::vector<std::shared_ptr<Cargo>> assortment_{};
     const size_t maxCargo_ = 10;
     const size_t maxAmount = 25;

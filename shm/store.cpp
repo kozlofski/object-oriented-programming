@@ -1,6 +1,7 @@
 #include "store.hpp"
 
 #include <algorithm>
+#include <iomanip>
 #include <memory>
 #include <random>
 
@@ -8,6 +9,7 @@
 #include "cargo.hpp"
 #include "fruit.hpp"
 #include "item.hpp"
+
 
 Store::Store() {}
 // Store::Store(Time* time)
@@ -54,7 +56,8 @@ Store::Response Store::sell(Cargo* cargoOnShip, size_t amount, Player* player) {
 
 void Store::listCargo() {
     std::for_each(assortment_.begin(), assortment_.end(), [i{0}](auto& cargo) mutable {
-        std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" << cargo->getAmount() << " units.\n";
+        std::cout << i++ << "\t" << cargo->getName() << "\t" << cargo->getPrice() << " $\t" 
+        << cargo->getAmount() << " units.\n";
     });
 }
 
@@ -95,12 +98,41 @@ void Store::generateCargo() {
 
     assortment_.push_back(std::make_shared<Item>("Sword", 1, 100 + 10 * static_cast<size_t>(priceDifference(gen)), static_cast<Item::Rarity>(1 + std::abs(rarity(gen)))));
 }
-
-std::ostream& operator<<(std::ostream& out, const Cargo& cargo) {
+std::ostream& operator<<(std::ostream& out, const Store& store){
+    out << "Your Cargos in the Shop" << '\n';
+    for (const auto& cargo : store.assortment_){
+    out << std::setw(12) << "Cargo name: " << cargo->getName() << '\n';
+    out << std::setw(14) << "Cargo amount: " << cargo->getAmount() << '\n';
+    out << std::setw(18) << "Cargo baseprice: " << cargo->getBasePrice() << '\n';
+    
+    if (typeid(*cargo) == typeid (Alcohol)){
+        auto alcohol = static_cast<Alcohol*> (cargo.get());
+        out << "Power: " << alcohol->getAlcoholPower() << '\n'; 
+    } else if (typeid (*cargo) == typeid (Fruit)) {
+        auto fruit = static_cast <Fruit*> (cargo.get());
+        out << "Time to spoil: " << fruit->getTimeToExpire() << '\n'; 
+    } else if (typeid (*cargo) == typeid(Item)) {
+        auto item = static_cast <Item*> (cargo.get());
+    }
     out << "-------------------------------------\n";
-    out << "Cargo name: " << cargo.getName() << '\n';
-    out << "Cargo amount: " << cargo.getAmount() << '\n';
-    out << "Cargo baseprice: " << cargo.getBasePrice() << '\n';
-    out << "-------------------------------------\n";
+    }
     return out;
 }
+
+//Cargo::Cargo(std::string name, size_t amount, size_t basePrice)
+//    : name_(name), amount_(amount), basePrice_(basePrice) {}
+/*
+        switch (item->getRarity()) {
+        case Item::Rarity::common;
+            out << "Rarity: common \n";
+            break;
+        case Item::Rarity::epic:
+            out << "Rarity: epic\n";
+            break;
+        case Item::Rarity::legendary:
+            out << "Rarity: legendary\n";
+            break;
+        case Item::Rarity::rare:
+            out << "Rarity: rare\n";
+            break;
+        }*/
